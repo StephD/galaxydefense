@@ -14,11 +14,11 @@ const Navigation = () => {
           
           <div className="flex items-center space-x-6">
             <Link 
-              to="/features" 
+              to="/database" 
               className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
             >
               <Database className="h-4 w-4" />
-              <span>Features</span>
+              <span>Database</span>
             </Link>
           </div>
         </div>

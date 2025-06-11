@@ -23,8 +23,8 @@ const HeroSection = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link to="/features" className="flex items-center space-x-2">
-                <span>Explore Features</span>
+              <Link to="/database" className="flex items-center space-x-2">
+                <span>Explore Database</span>
                 <ChevronRight className="h-5 w-5" />
               </Link>
             </Button>
