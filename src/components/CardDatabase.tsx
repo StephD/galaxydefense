@@ -4,49 +4,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { useCardsData, useTowersData } from "@/hooks/useCardsData";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Types for our game data
-type Tower = "Archer" | "Cannon" | "Lightning" | "Ice" | "Fire" | "Poison" | "Magic";
 type CardType = "Normal" | "Chain" | "Combo" | "Elite";
 type Tier = "T1" | "T2" | "T3";
 
-interface GameCard {
-  id: number;
-  name: string;
-  type: CardType;
-  towers: Tower[];
-  tier: Tier;
-  description: string;
-}
-
-// Sample card data
-const gameCards: GameCard[] = [
-  { id: 1, name: "Swift Arrow", type: "Normal", towers: ["Archer"], tier: "T1", description: "Increases archer attack speed" },
-  { id: 2, name: "Explosive Shot", type: "Chain", towers: ["Cannon"], tier: "T2", description: "Cannon shots create chain explosions" },
-  { id: 3, name: "Frost Storm", type: "Combo", towers: ["Ice", "Lightning"], tier: "T3", description: "Combines ice and lightning for devastating effect" },
-  { id: 4, name: "Blazing Arrows", type: "Elite", towers: ["Archer"], tier: "T3", description: "Elite archer enhancement with fire damage" },
-  { id: 5, name: "Thunder Bolt", type: "Normal", towers: ["Lightning"], tier: "T1", description: "Basic lightning tower boost" },
-  { id: 6, name: "Poison Cloud", type: "Chain", towers: ["Poison"], tier: "T2", description: "Creates spreading poison clouds" },
-  { id: 7, name: "Arcane Blast", type: "Normal", towers: ["Magic"], tier: "T2", description: "Enhances magic tower power" },
-  { id: 8, name: "Frozen Cannon", type: "Combo", towers: ["Ice", "Cannon"], tier: "T3", description: "Combines ice and cannon for area control" },
-  { id: 9, name: "Fire Rain", type: "Elite", towers: ["Fire"], tier: "T3", description: "Elite fire tower creates burning rain" },
-  { id: 10, name: "Basic Shield", type: "Normal", towers: ["Magic"], tier: "T1", description: "Simple magical protection" },
-];
-
-const towers: Tower[] = ["Archer", "Cannon", "Lightning", "Ice", "Fire", "Poison", "Magic"];
-const cardTypes: CardType[] = ["Normal", "Chain", "Combo", "Elite"];
-const tiers: Tier[] = ["T1", "T2", "T3"];
-
 const CardDatabase = () => {
-  const [selectedTowers, setSelectedTowers] = useState<Tower[]>([]);
+  const { data: cards = [], isLoading: cardsLoading, error: cardsError } = useCardsData();
+  const { data: towers = [], isLoading: towersLoading } = useTowersData();
+  
+  const [selectedTowers, setSelectedTowers] = useState<string[]>([]);
   const [selectedCardType, setSelectedCardType] = useState<string>("all");
   const [selectedTier, setSelectedTier] = useState<string>("all");
 
+  const cardTypes: CardType[] = ["Normal", "Chain", "Combo", "Elite"];
+  const tiers: Tier[] = ["T1", "T2", "T3"];
+
   const filteredCards = useMemo(() => {
-    return gameCards.filter(card => {
+    return cards.filter(card => {
       // Tower filter
       const towerMatch = selectedTowers.length === 0 || 
-        card.towers.some(tower => selectedTowers.includes(tower));
+        selectedTowers.includes(card.tower.name);
       
       // Card type filter
       const typeMatch = selectedCardType === "all" || card.type === selectedCardType;
@@ -56,13 +35,13 @@ const CardDatabase = () => {
       
       return towerMatch && typeMatch && tierMatch;
     });
-  }, [selectedTowers, selectedCardType, selectedTier]);
+  }, [cards, selectedTowers, selectedCardType, selectedTier]);
 
-  const handleTowerToggle = (tower: Tower) => {
+  const handleTowerToggle = (towerName: string) => {
     setSelectedTowers(prev => 
-      prev.includes(tower) 
-        ? prev.filter(t => t !== tower)
-        : [...prev, tower]
+      prev.includes(towerName) 
+        ? prev.filter(t => t !== towerName)
+        : [...prev, towerName]
     );
   };
 
@@ -85,6 +64,31 @@ const CardDatabase = () => {
     }
   };
 
+  if (cardsLoading || towersLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-secondary/20 rounded-lg">
+          {[1, 2, 3].map(i => (
+            <Skeleton key={i} className="h-32 w-full" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map(i => (
+            <Skeleton key={i} className="h-40 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (cardsError) {
+    return (
+      <div className="text-center py-8 text-destructive">
+        Error loading cards data. Please try again later.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -102,13 +106,13 @@ const CardDatabase = () => {
               <label htmlFor="show-all-towers" className="text-sm">Show All</label>
             </div>
             {towers.map(tower => (
-              <div key={tower} className="flex items-center space-x-2">
+              <div key={tower.id} className="flex items-center space-x-2">
                 <Checkbox 
-                  id={tower}
-                  checked={selectedTowers.includes(tower)}
-                  onCheckedChange={() => handleTowerToggle(tower)}
+                  id={tower.name}
+                  checked={selectedTowers.includes(tower.name)}
+                  onCheckedChange={() => handleTowerToggle(tower.name)}
                 />
-                <label htmlFor={tower} className="text-sm">{tower}</label>
+                <label htmlFor={tower.name} className="text-sm">{tower.name}</label>
               </div>
             ))}
           </div>
@@ -149,7 +153,7 @@ const CardDatabase = () => {
 
       {/* Results Count */}
       <div className="text-sm text-muted-foreground">
-        Showing {filteredCards.length} of {gameCards.length} cards
+        Showing {filteredCards.length} of {cards.length} cards
       </div>
 
       {/* Cards Grid */}
@@ -159,13 +163,26 @@ const CardDatabase = () => {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg">{card.name}</CardTitle>
-                <span className={`font-bold ${getTierColor(card.tier)}`}>{card.tier}</span>
+                <div className="flex items-center gap-2">
+                  <span className={`font-bold ${getTierColor(card.tier)}`}>{card.tier}</span>
+                  {card.unlock_level && (
+                    <Badge variant="outline" className="text-xs">Lv.{card.unlock_level}</Badge>
+                  )}
+                </div>
               </div>
               <div className="flex flex-wrap gap-1">
                 <Badge className={getCardTypeColor(card.type)}>{card.type}</Badge>
-                {card.towers.map(tower => (
-                  <Badge key={tower} variant="outline">{tower}</Badge>
-                ))}
+                <Badge variant="outline">{card.tower.name}</Badge>
+                {card.parent_card && (
+                  <Badge variant="secondary" className="text-xs">
+                    Chain: {card.parent_card.name}
+                  </Badge>
+                )}
+                {card.combo_card && (
+                  <Badge variant="secondary" className="text-xs">
+                    Combo: {card.combo_card.name}
+                  </Badge>
+                )}
               </div>
             </CardHeader>
             <CardContent>
