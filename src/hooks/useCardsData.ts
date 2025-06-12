@@ -45,7 +45,18 @@ export const useCardsData = () => {
         throw error;
       }
 
-      return data as Card[];
+      // Transform the data to handle the array responses from Supabase
+      const transformedData = data?.map(card => ({
+        ...card,
+        combo_card: Array.isArray(card.combo_card) && card.combo_card.length > 0 
+          ? card.combo_card[0] as any 
+          : undefined,
+        parent_card: Array.isArray(card.parent_card) && card.parent_card.length > 0 
+          ? card.parent_card[0] as any 
+          : undefined
+      })) || [];
+
+      return transformedData as Card[];
     }
   });
 };

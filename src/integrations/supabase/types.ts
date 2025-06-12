@@ -75,22 +75,49 @@ export type Database = {
       }
       towers: {
         Row: {
+          atk_range: string | null
+          cooldown: number | null
           created_at: string
           description: string | null
+          dmg_interval: number | null
+          dmg_range: number | null
+          dmg_type: string | null
+          duration: number | null
+          explosion_dmg: number | null
           id: string
           name: string
+          penetration: number | null
+          type: string | null
         }
         Insert: {
+          atk_range?: string | null
+          cooldown?: number | null
           created_at?: string
           description?: string | null
+          dmg_interval?: number | null
+          dmg_range?: number | null
+          dmg_type?: string | null
+          duration?: number | null
+          explosion_dmg?: number | null
           id?: string
           name: string
+          penetration?: number | null
+          type?: string | null
         }
         Update: {
+          atk_range?: string | null
+          cooldown?: number | null
           created_at?: string
           description?: string | null
+          dmg_interval?: number | null
+          dmg_range?: number | null
+          dmg_type?: string | null
+          duration?: number | null
+          explosion_dmg?: number | null
           id?: string
           name?: string
+          penetration?: number | null
+          type?: string | null
         }
         Relationships: []
       }
