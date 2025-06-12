@@ -14,7 +14,6 @@ interface Card {
   type: 'Normal' | 'Chain' | 'Combo' | 'Elite';
   tier: 'T1' | 'T2' | 'T3';
   description: string | null;
-  unlock_level: number | null;
   tower: Tower;
   combo_card?: Card;
   parent_card?: Card;
@@ -32,7 +31,6 @@ export const useCardsData = () => {
           type,
           tier,
           description,
-          unlock_level,
           combo_card_id,
           parent_card_id,
           tower:towers(id, name, description)

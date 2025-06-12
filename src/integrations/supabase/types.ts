@@ -20,7 +20,6 @@ export type Database = {
           tier: Database["public"]["Enums"]["tier_type"]
           tower_id: string
           type: Database["public"]["Enums"]["card_type"]
-          unlock_level: number | null
           updated_at: string
         }
         Insert: {
@@ -33,7 +32,6 @@ export type Database = {
           tier: Database["public"]["Enums"]["tier_type"]
           tower_id: string
           type: Database["public"]["Enums"]["card_type"]
-          unlock_level?: number | null
           updated_at?: string
         }
         Update: {
@@ -46,7 +44,6 @@ export type Database = {
           tier?: Database["public"]["Enums"]["tier_type"]
           tower_id?: string
           type?: Database["public"]["Enums"]["card_type"]
-          unlock_level?: number | null
           updated_at?: string
         }
         Relationships: [

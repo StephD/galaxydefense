@@ -47,7 +47,7 @@ const CardDatabase = () => {
 
   const getCardTypeColor = (type: CardType) => {
     switch (type) {
-      case "Normal": return "bg-secondary";
+      case "Normal": return "bg-blue-500 text-white";
       case "Chain": return "bg-primary";
       case "Combo": return "bg-destructive";
       case "Elite": return "bg-accent";
@@ -165,9 +165,6 @@ const CardDatabase = () => {
                 <CardTitle className="text-lg">{card.name}</CardTitle>
                 <div className="flex items-center gap-2">
                   <span className={`font-bold ${getTierColor(card.tier)}`}>{card.tier}</span>
-                  {card.unlock_level && (
-                    <Badge variant="outline" className="text-xs">Lv.{card.unlock_level}</Badge>
-                  )}
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">
