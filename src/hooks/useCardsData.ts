@@ -33,9 +33,9 @@ export const useCardsData = () => {
           tier,
           description,
           unlock_level,
-          tower:towers(id, name, description),
-          combo_card:cards!cards_combo_card_id_fkey(id, name, type),
-          parent_card:cards!cards_parent_card_id_fkey(id, name, type)
+          combo_card_id,
+          parent_card_id,
+          tower:towers(id, name, description)
         `)
         .order('tier', { ascending: true })
         .order('name', { ascending: true });
@@ -45,16 +45,35 @@ export const useCardsData = () => {
         throw error;
       }
 
-      // Transform the data to handle the array responses from Supabase
-      const transformedData = data?.map(card => ({
+      if (!data) return [];
+
+      // Fetch combo and parent cards separately
+      const cardIds = data.map(card => card.id);
+      const comboCardIds = data.map(card => card.combo_card_id).filter(Boolean);
+      const parentCardIds = data.map(card => card.parent_card_id).filter(Boolean);
+      
+      const relatedCardIds = [...new Set([...comboCardIds, ...parentCardIds])];
+      
+      let relatedCards: any[] = [];
+      if (relatedCardIds.length > 0) {
+        const { data: relatedCardsData } = await supabase
+          .from('cards')
+          .select('id, name, type')
+          .in('id', relatedCardIds);
+        
+        relatedCards = relatedCardsData || [];
+      }
+
+      // Transform the data to include related cards
+      const transformedData = data.map(card => ({
         ...card,
-        combo_card: Array.isArray(card.combo_card) && card.combo_card.length > 0 
-          ? card.combo_card[0] as any 
+        combo_card: card.combo_card_id 
+          ? relatedCards.find(c => c.id === card.combo_card_id) 
           : undefined,
-        parent_card: Array.isArray(card.parent_card) && card.parent_card.length > 0 
-          ? card.parent_card[0] as any 
+        parent_card: card.parent_card_id 
+          ? relatedCards.find(c => c.id === card.parent_card_id) 
           : undefined
-      })) || [];
+      }));
 
       return transformedData as Card[];
     }
