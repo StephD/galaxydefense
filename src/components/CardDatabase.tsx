@@ -50,7 +50,7 @@ const CardDatabase = () => {
       case "Normal": return "bg-blue-500 text-white";
       case "Chain": return "bg-primary";
       case "Combo": return "bg-destructive";
-      case "Elite": return "bg-accent";
+      case "Elite": return "bg-primary";
       default: return "bg-muted";
     }
   };
