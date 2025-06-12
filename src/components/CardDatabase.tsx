@@ -47,10 +47,10 @@ const CardDatabase = () => {
 
   const getCardTypeColor = (type: CardType) => {
     switch (type) {
-      case "Normal": return "bg-blue-500 text-white";
-      case "Chain": return "bg-primary";
-      case "Combo": return "bg-destructive";
-      case "Elite": return "bg-primary";
+      case "Normal": return "bg-cyan-200 text-black";
+      case "Chain": return "bg-cyan-400 text-white";
+      case "Combo": return "bg-cyan-600 text-white";
+      case "Elite": return "bg-purple-500 text-white";
       default: return "bg-muted";
     }
   };
