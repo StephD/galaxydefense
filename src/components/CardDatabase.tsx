@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { useCardsData, useTowersData } from "@/hooks/useCardsData";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MultiSelect, Option } from "@/components/ui/multi-select";
+import { MultiSelectNoSearch, Option } from "@/components/ui/multi-select-no-search";
 
 type CardType = "Normal" | "Chain" | "Combo" | "Elite";
 type Tier = "T1" | "T2" | "T3";
@@ -19,11 +19,47 @@ const CardDatabase = () => {
   const [selectedCardType, setSelectedCardType] = useState<string>("all");
   const [selectedTier, setSelectedTier] = useState<string>("all");
 
+  // Define tower order for sorting
+  const towerOrder = [
+    "Sky Guard",
+    "Laser",
+    "Disruption Drone",
+    "Aeroblast",
+    "Thunderbolt",
+    "Beam",
+    "Firewheel Drone",
+    "Hive",
+    "Railgun",
+    "Teslacoil",
+    "Gravity Vortex Gun"
+  ];
+  
+  // Sort towers based on predefined order
+  const sortedTowers = useMemo(() => {
+    return [...towers].sort((a, b) => {
+      const indexA = towerOrder.indexOf(a.name);
+      const indexB = towerOrder.indexOf(b.name);
+      
+      // If both towers are in our order list, sort by that order
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      
+      // If only one tower is in our order list, prioritize it
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      
+      // If neither tower is in our list, sort alphabetically
+      return a.name.localeCompare(b.name);
+    });
+  }, [towers]);
+
   const cardTypes: CardType[] = ["Normal", "Chain", "Combo", "Elite"];
   const tiers: Tier[] = ["T1", "T2", "T3"];
 
   const filteredCards = useMemo(() => {
-    return cards.filter(card => {
+    // First filter the cards
+    const filtered = cards.filter(card => {
       // Tower filter
       const towerMatch = selectedTowers.length === 0 || 
         selectedTowers.includes(card.tower.name);
@@ -36,7 +72,34 @@ const CardDatabase = () => {
       
       return towerMatch && typeMatch && tierMatch;
     });
-  }, [cards, selectedTowers, selectedCardType, selectedTier]);
+    
+    // Then sort them by tower order, then by tier, then by type
+    return filtered.sort((a, b) => {
+      // First sort by tower order
+      const towerIndexA = towerOrder.indexOf(a.tower.name);
+      const towerIndexB = towerOrder.indexOf(b.tower.name);
+      
+      if (towerIndexA !== towerIndexB) {
+        // If both towers are in our order list, sort by that order
+        if (towerIndexA !== -1 && towerIndexB !== -1) {
+          return towerIndexA - towerIndexB;
+        }
+        
+        // If only one tower is in our order list, prioritize it
+        if (towerIndexA !== -1) return -1;
+        if (towerIndexB !== -1) return 1;
+      }
+      
+      // If same tower or neither in order list, sort by tier
+      const tierOrder = { T1: 0, T2: 1, T3: 2 };
+      const tierCompare = tierOrder[a.tier as Tier] - tierOrder[b.tier as Tier];
+      if (tierCompare !== 0) return tierCompare;
+      
+      // If same tier, sort by card type
+      const typeOrder = { Normal: 0, Chain: 1, Combo: 2, Elite: 3 };
+      return typeOrder[a.type as CardType] - typeOrder[b.type as CardType];
+    });
+  }, [cards, selectedTowers, selectedCardType, selectedTier, towerOrder]);
 
 
 
@@ -48,6 +111,32 @@ const CardDatabase = () => {
       case "Elite": return "bg-purple-500 text-white";
       default: return "bg-muted";
     }
+  };
+
+  const getTowerTypeColor = (towerName: string) => {
+    // Physical towers (sky-blue)
+    if (["Railgun", "Guardian", "Aeroblast"].includes(towerName)) {
+      return "bg-sky-200 text-sky-800";
+    }
+    // Energy towers (green)
+    else if (["Laser", "Beam"].includes(towerName)) {
+      return "bg-green-300 text-green-800";
+    }
+    // Electric towers (purple)
+    else if (["Thunderbolt", "Teslacoil"].includes(towerName)) {
+      return "bg-purple-300 text-purple-800";
+    }
+    // Fire towers (blue)
+    else if (["Sky Guard", "Firewheel Drone"].includes(towerName)) {
+      return "bg-blue-300 text-blue-800";
+    }
+
+    // Force-field towers (Grey-white)
+    else if (["Gravity Vortex Gun", "Disruption Drone", "Hive"].includes(towerName)) {
+      return "bg-slate-300 text-slate-800";
+    }
+    // Default
+    return "";
   };
 
   const getTierColor = (tier: Tier) => {
@@ -91,8 +180,8 @@ const CardDatabase = () => {
         {/* Tower Filter */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Filter by Tower</label>
-          <MultiSelect
-            options={towers ? towers.map(tower => ({ label: tower.name, value: tower.name })) : []}
+          <MultiSelectNoSearch
+            options={sortedTowers ? sortedTowers.map(tower => ({ label: tower.name, value: tower.name })) : []}
             selected={selectedTowers}
             onChange={setSelectedTowers}
             placeholder="Select towers..."
@@ -177,14 +266,14 @@ const CardDatabase = () => {
                     </div>
                     <div className="flex flex-wrap gap-1">
                       <Badge className={getCardTypeColor(card.type)}>{card.type}</Badge>
-                      <Badge variant="outline">{card.tower.name}</Badge>
+                      <Badge className={getTowerTypeColor(card.tower.name)}>{card.tower.name}</Badge>
                       {card.parent_card && (
                         <Badge variant="secondary" className="text-xs">
                           Chain: {card.parent_card.name}
                         </Badge>
                       )}
                       {card.combo_tower && (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge className={`text-xs ${getTowerTypeColor(card.combo_tower.name)}`}>
                           Combo: {card.combo_tower.name}
                         </Badge>
                       )}

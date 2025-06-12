@@ -59,33 +59,41 @@
 - **Laser Amplification** - Laser DMG +50%
 - **Stable Energy** - Laser duration +40%
 - **Laser Reflection** - Laser reflection +1, DMG -20% per reflection
+
+#### Chain (Shiny Cyan)
 - **Additional Sweep** - Fires 1 additional Sweeping Laser
 - **Energy Surge** - Fires 2 additional Deflected Lasers
 
-#### Chain (Shiny Cyan)
+#### Elite (Purple)
 - **High-Energy Pulse** - Laser width +100%
 - **Multi-Strike** - Laser duration +100%, cooldown speed +20%
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Shiny Cyan)
 - **Vulnerable Laser** - Enemies hit by Sweeping Lasers receive [Vulnerable] effect
 - **Slow Laser** - Enemies hit by Deflected Lasers receive [Slow] effect
-- **Energy Paralysis** - Enemies hit by Laser receive [Paralyze] effect
 
-#### Chain (Shiny Cyan)
-- **Tear Explosion** *Laser* - 50% chance to trigger a Ripping Laser when hitting enemies with Laser
-- **Energy Boost** - Laser DMG +80% for each debuff on enemies (MAX:300%) (Unlock at Lv.18)
 
 #### Elite (Purple)
 - **Energy Overload** - Debuff duration from all Lasers +100%
+- **Tear Explosion** - 50% chance to trigger a Ripping Laser when hitting enemies with Laser
+- **Energy Boost** - Laser DMG +80% for each debuff on enemies (MAX:300%) (Unlock at Lv.18)
+
+### Combo (Shiny Cyan)
+- **Energy Paralysis** *Thunderbolt* - Enemies hit by Laser receive [Paralyze] effect
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
-- **Sweep Boost** - Sweeping Laser sweeps once again
-- **Energy Detonation** - All Lasers hitting enemies with [Burn] effect will trigger an Ignition Explosion
-
 #### Chain (Shiny Cyan)
+- **Sweep Boost** - Sweeping Laser sweeps once again
 - **Deflected Laser Reflection** - Deflected Laser reflections +1 (Unlock at Lv.14)
+
+### Combo (Shiny Cyan)
+- **Energy Detonation** *Sky Guard* - All Lasers hitting enemies with [Burn] effect will trigger an Ignition Explosion
+- **Convergence Trigger** *Laser* - 30% chance to generates a Refracted Laser upon Laser hitting enemies
+
+### chain cards
+- **Additional Sweep** (T1) -> **Vulnerable Laser** (T2) -> **Sweep Boost** (T3)
+- **Energy Surge** (T1) -> **Slow Laser** (T2) -> **Deflected Laser Reflection** (T3)
 
 ## Disruption Drone
 ### Tier 1 (T1)
@@ -93,6 +101,8 @@
 - **Field Amplification** - Disruption Field DMG +50%
 - **Field Duration** - Disruption Field duration +30%
 - **Field Expansion** - Disruption Field width +30%
+
+#### Chain (Shiny Cyan)
 - **Disruption Force** - Each time Disruption Field deals damage to enemies, it inflicts 1 stack of [Disruption] effect
 - **Random Disturbance** - Enemies hit by Disruption Field have a 5% chance to be teleported back a certain distance
 
@@ -101,22 +111,26 @@
 - **Stasis Field** - Each time enemies take damage from Disruption Field, [Slow] effect +10% (MAX: 90%)
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Disruption Burst** - When [Disruption] effect reaches MAX stacks, deals 1 high burst DMG
 - **Rewind Teleport** - Enemies hit by Disruption Field have a 2.5% chance to be transported to start point
-- **Small Laser** - A Sweeping Laser is generated in the center of Disruption Drone
-- **Electric Field** - Enemies hit by Disruption Field have a 30% chance to be inflicted [Paralyze]
+
+#### Combo (Shiny Cyan)
+- **Small Laser** *Laser* - A Sweeping Laser is generated in the center of Disruption Drone
+- **Electric Field** *Teslacoil* - Enemies hit by Disruption Field have a 30% chance to be inflicted [Paralyze]
 
 #### Elite (Purple)
 - **Quick Cooldown** - Disruption Drone DMG interval -30%, cooldown speed +30%
 - **Field Suppression** - Enemies in the Disruption Field take increased additional DMG based on their reduced speed (MAX: 200% additional DMG)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Area Disruption** - When [Disruption] effect reaches MAX stacks, deals 1 extra DMG
 - **Teleport Damage** - Teleportation from the Disruption Field deals 3% of the target's MAX HP as DMG
-- **Fortress Support** - Launch an additional set of Disruption Drones above Fortress
-- **Field Replication** - When Railgun Shell enters Disruption Field first time, it 100% splits into 1 additional Railgun Shell
+
+#### Combo (Shiny Cyan)
+- **Fortress Support** *Guardian* - Launch an additional set of Disruption Drones above Fortress
+- **Field Replication** *Railgun* - When Railgun Shell enters Disruption Field first time, it 100% splits into 1 additional Railgun Shell
 
 #### Elite (Purple)
 - **Converging Field** - Disruption Drone DMG +100%, each DMG pulls enemies toward the center (Unlock at Lv.18)
@@ -127,6 +141,8 @@
 - **Powerful Blast** - Aeroblast Shell DMG +50%
 - **Multiple Blast** - Aeroblast Shell +1, DMG -15%
 - **Impact Enhancement** - Aeroblast Shell knockback +50%, DMG +30%
+
+#### Chain (Cyan)
 - **Shotgun Barrage** - After Aeroblast fires, it launches 5 penetrating Shotgun Shells
 - **Floating Mine** - Upon explosion, Aeroblast Shell leaves 2 Floating Mines in the explosion area
 
@@ -135,22 +151,30 @@
 - **Central Blast** - Aeroblast Shells deal an additional high-energy explosion to the center area
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Extra Loading** - For each enemy killed, Aeroblast fires 1 additional penetrating Shotgun Shell (MAX: 10)
 - **Wide Minefield** - Floating Mine +2, explosion DMG +25%
-- **Piercing Blast** - Aeroblast Shell Penetration +1
-- **Firewheel Summon** - For each enemy hit by Aeroblast Shell explosion, it generate a Small Firewheel Drone
+- **Mine Shockwave** - Floating Mine +2, knockback +100% (Unlock at Lv.14)
+
+#### Combo (Shiny Cyan)
+- **Piercing Blast** *Railgun* - Aeroblast Shell Penetration +1
+- **Firewheel Summon** *Firewheel Drone* - For each enemy hit by Aeroblast Shell explosion, it generate a Small Firewheel Drone
 
 #### Elite (Purple)
 - **Chain Explosion** - For each enemy hit by Aeroblast Shell explosion, explosion DMG +20% (MAX: 200%)
 - **Range Extension** - Aeroblast range +70%
 - **Secondary Explosion** - Enemies hit by Aeroblast Shell will trigger an additional explosion after 1s (Unlock at Lv.18)
-- **Mine Shockwave** - Floating Mine +2, knockback +100% (Unlock at Lv.14)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Shotgun Penetration** - Penetrating Shotgun Shells penetration DMG +50%, range +70%
-- **Gravity Bomb** - Aeroblast shell DMG +100%, pulls enemies to the center before the explosion
+
+#### Combo (Shiny Cyan)
+- **Gravity Bomb** *Gravity Vortex Gun* - Aeroblast shell DMG +100%, pulls enemies to the center before the explosion
+
+### chain cards
+- **Shotgun Barrage** (T1) -> **Extra Loading** (T2) -> **Shotgun Penetration** (T3)
+- **Floating Mine** (T1) -> **Mine Shockwave** (T2) / **Wide Minefield** (T2)
 
 ## Thunderbolt
 ### Tier 1 (T1)
@@ -158,6 +182,8 @@
 - **Continuous Strike** - Thunderbolt +1, Lightning Strike DMG -15%
 - **Swift Strike** - Lightning Strike cooldown speed +10%, DMG +30%
 - **Lightning Boost** - Lightning Strike DMG +50%
+
+#### Chain (Shiny Cyan)
 - **Lightning Paralysis** - Enemies hit by Lightning Strike receive [Paralyze] effect
 - **Chain Lightning** - Lightning Strike trigger 1 Chain Lightning on hit (MAX: 5)
 
@@ -167,21 +193,29 @@
 - **Paralysis Chain** - Enemies paralyzed by Thunderbolt trigger a small chain Lightning each time they take damage (0.5s interval)
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Paralysis Extension** - Duration of [Paralyze] effect caused by the Thunderbolt +100%
 - **Chain Expansion** - Chain Lightning's target +4
-- **Lightning Aftershock** - There is a 50% chance to generate 1 Floating Mine by Thunderbolt hits enemies
-- **Lightning Trail** - After Lighting Strike, leaving a flame trail during flight
+
+#### Combo (Shiny Cyan)
+- **Lightning Aftershock** *Aeroblast* - There is a 50% chance to generate 1 Floating Mine by Thunderbolt hits enemies
+- **Lightning Trail** *Firewheel Drone* - After Lighting Strike, leaving a flame trail during flight
 
 #### Elite (Purple)
 - **Extra Strike** - Lightning Strike has a 50% chance to trigger 1 more time
 - **Chain Strike** - Enemies hit by Chain Lightning have a 25% chance to trigger a Small Lightning Strike (Unlock at Lv.16)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Life Erosion** - Lightning Strike deals an additional 3% of the target's MAX HP as DMG when inflicting [Paralyze] effect
 - **Chain Interference** - Enemies hit by Chain Lightning receive [Paralyze] effect, Chain Lightning DMG +100%
-- **Lightning Teleportation** - Enemies hit by Lightning Strike or Chain Lightning have a 50% chance to be teleported back a certain distance
+
+#### Combo (Shiny Cyan)
+- **Lightning Teleportation** *Disruption Drone* - Enemies hit by Lightning Strike or Chain Lightning have a 50% chance to be teleported back a certain distance
+
+### chain cards
+- **Lightning Paralysis** (T1) -> **Paralysis Chain** (T2) / **Paralysis Extension** (T2) -> **Life Erosion** (T3)
+- **Chain Lightning** (T1) ->  **Chain Expansion** (T2) -> **Chain Interference** (T3)
 
 ## Beam
 ### Tier 1 (T1)
@@ -189,6 +223,8 @@
 - **Beam Boost** - Beam DMG +50%
 - **Efficient Beam** - Beam cooldown speed +30%
 - **Damage Increase** - Beam deals increasing damage to the same target (MAX: 200%)
+
+#### Chain (Cyan)
 - **High-Frequency Beam** - Beam duration +40%
 - **Beam Refraction** - When the Beam hits a target, it generates Refracted Beams with +2 refractions
 
@@ -197,21 +233,29 @@
 - **Beam Penetration** - All Beams inflict [Vulnerable] effect to targets
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Stacking Damage** - When the Beam switches targets, damage continues to increase
 - **Refraction Pull** - Refraction +2, Refracted Beams will pull the hit target towards the center
-- **Target Explosion** - Each hit from Beam triggers an explosion
+
+#### Combo (Shiny Cyan)
+- **Target Explosion** *Sky Guard* - Each hit from Beam triggers an explosion
 
 #### Elite (Purple)
 - **Extra Beam** - Release an additional secondary Beam
 - **Slaughtering Beam** - Every enemy killed by Beam, the Beam duration +10% (MAX: 100%)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Extreme Focus** - Damage stacking cap increased to 400%
 - **Refraction Explosion** - Each hit by Refracted Beam will cause an explosion
-- **Beam Lightning** - Each hit from Beam has a 30% chance to trigger 1 Chain Lightning
-- **Matrix Resonance** - Beam releases an expanding Electric Matrix on hit (Unlock at Lv.14)
+
+#### Combo (Shiny Cyan)
+- **Beam Lightning** *Thunderbolt* - Each hit from Beam has a 30% chance to trigger 1 Chain Lightning
+- **Matrix Resonance** *Teslacoil* - Beam releases an expanding Electric Matrix on hit (Unlock at Lv.14)
+
+### chain cards
+- **Damage Increase** -> **Stacking Damage** (T2) -> **Extreme Focus** (T3)
+- **Beam Refraction** -> **Refraction Pull** (T2) -> **Refraction Explosion** (T3)
 
 ## Firewheel Drone
 ### Tier 1 (T1)
@@ -219,6 +263,8 @@
 - **Firewheel Boost** - Firewheel Drone DMG +50%
 - **Size Boost** - Firewheel Drone size +25%
 - **Duration Extension** - Firewheel Drone duration +30%
+
+#### Chain (Cyan)
 - **Mini Drones** - Firewheel Drone summons 2 Mini Firewheel Drones every 3s
 - **Flame Trail** - Firewheel Drone leaves a Flame Trail for 2s during flight
 
@@ -227,21 +273,29 @@
 - **Hold the Ground** - Firewheel Drone stays for an additional 10s after it ends
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Killing Array** - For every 2 enemies directly killed by Firewheel Drone, summon 2 Mini Firewheel Drones
 - **Blazing Trail** - Flame Trail DMG +60%
-- **Firewheel Ignition** - Firewheel Drone has a 20% chance to inflict [Burning] effect
+
+#### Combo (Shiny Cyan)
+- **Firewheel Ignition** *Sky Guard* - Firewheel Drone has a 20% chance to inflict [Burning] effect
+- **Vortex Firewheel** *Gravity Vortex Gun* - Firewheel Drone creates a pull effect around it
 
 #### Elite (Purple)
 - **Killing Charge** - For every 2 enemies directly killed by Firewheel Drone, Firewheel Drone CD -0.5s (MAX: 5s)
 - **Combo Boost** - For every 20 hits dealt by Firewheel Drone, Firewheel Drone DMG +20% (MAX: +200%)
-- **Vortex Firewheel** - Firewheel Drone creates a pull effect around it (Unlock at Lv.18)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Mini Size Boost** - Mini Firewheel Drone DMG +50%, duration +50%
 - **Extended Trail** - Flame Trail duration +2s
-- **Extra Barrage** - For every 15 hits dealt by Firewheel Drone, launch 1 ring of penetrating bullets
+
+#### Combo (Shiny Cyan)
+- **Extra Barrage** *Aeroblast* - For every 15 hits dealt by Firewheel Drone, launch 1 ring of penetrating bullets
+
+### chain cards
+- **Mini Drones** (T1) -> **Killing Array** (T2) -> **Mini Size Boost** (T3)
+- **Flame Trail** (T1) -> **Blazing Trail** (T2) -> **Extended Trail** (T3)
 
 ## Hive
 ### Tier 1 (T1)
@@ -249,6 +303,8 @@
 - **Swarm Assault** - Wasps DMG +50%
 - **Rapid Barrage** - Wasps attack count +2
 - **Dense Swarm** - Wasps +2, DMG -15%
+
+#### Chain (Cyan)
 - **Contact Pulse** - Wasp Releases 1 Pulse Wave on first hit
 - **Swarm Echo** - Wasps spawn 1 Echo Wasp I on kill (Max: 1)
 
@@ -257,12 +313,14 @@
 - **Hive Mutation II** - Hive launches Wasp II after 2 volleys
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Amplified Pulse** - Pulse Wave DMG range +30% and inflicts [Slow] effect on hit
 - **Final Resonance** - Wasp releases 1 Pulse Wave when it ends
 - **Echo Upgrade II** - Evolves echoes to Echo Wasp II
-- **Electro-Wasps** - Each Wasp attack has a 50% chance to release a High-voltage shock at enemies in close range
-- **Projectile Fission** - Wasps split into 7 sub-projectiles on hit
+
+#### Combo (Shiny Cyan)
+- **Electro-Wasps** *Teslacoil* - Each Wasp attack has a 50% chance to release a High-voltage shock at enemies in close range
+- **Projectile Fission** *Guardian* - Wasps split into 7 sub-projectiles on hit
 
 #### Elite (Purple)
 - **Wasp Evolution III** - Wasp II evolves to III after 3 attacks
@@ -270,9 +328,15 @@
 - **Wasp Retrieval** - Wasps have a 50% chance to return to Hive when destroyed
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Echo Upgrade III** - Evolves echoes to Echo Wasp III
-- **Swarm Fury** - Wasps +30% DMG after each attack
+
+#### Combo (Shiny Cyan)
+- **Swarm Fury** *Laser* - Wasps +30% DMG after each attack
+
+### chain cards
+- **Swarm Echo** (T1) -> **Echo Upgrade II** (T2) -> **Echo Upgrade III** (T3)
+- **Contact Pulse** (T1) -> **Amplified Pulse** (T2) / **Final Resonance** (T2)
 
 ## Railgun
 ### Tier 1 (T1)
@@ -280,6 +344,8 @@
 - **Ammo Boost** - Railgun Shell DMG +50%
 - **Shell Salvo** - Railgun Shell +1, DMG -15%
 - **Railgun Upgrade** - Railgun Shell DMG +30%, Penetration +1
+
+#### Chain (Cyan)
 - **Piercing Mark** - Upon hitting the first enemy, Railgun Shell splits into 2 Small Railgun Shells, with a 20% chance to split into 2 more
 - **Explosive Shells** - Railgun Shell explodes on hit
 
@@ -288,21 +354,30 @@
 - **Weak Spot Strike** - Railgun Shell DMG increases with target HP (MAX: 150%)
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Piercing Enhancement** - Upon hitting the first enemy, Small Railgun Shell splits into 2 Mini Railgun Shells, with a 20% chance to split into 2 more
 - **Impact Spread** - Railgun Shell explosion range +20% for each penetration
 - **Impact Boost** - Railgun Shell explosion DMG +30% for each penetration
-- **Piercing Mark** - Enemies hit by all Railgun shells receive [Physical Vulnerable] effect
+
+#### Combo (Shiny Cyan)
+- **Piercing Mark** *Guardian* - Enemies hit by all Railgun shells receive [Physical Vulnerable] effect
 
 #### Elite (Purple)
 - **Shell Crit Boost** - All Railgun Shells DMG +40%, Crit Rate +30%
 - **Execution Penetration** - Railgun Shell penetration +1 on kill (MAX: +5)
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Split Mastery** - All Railgun shells' split chance +40%
-- **Secondary Minefield** - Railgun Shell releases 1 Floating Mine on hit
-- **Piercing Ricochet** - All Railgun shells penetration +1, reflection +1 (Unlock at Lv.18)
+
+#### Combo (Shiny Cyan)
+- **Secondary Minefield** *Aeroblast* - Railgun Shell releases 1 Floating Mine on hit
+- **Piercing Ricochet** *Firewheel Drone* - All Railgun shells penetration +1, reflection +1 (Unlock at Lv.18)
+
+### chain cards
+- **Piercing Mark** (T1) -> **Piercing Enhancement** (T2) -> **Split Mastery** (T3)
+- **Explosive Shells** (T1) -> **Impact Spread** (T2) / **Impact Boost** (T2)
+
 
 ## Teslacoil
 ### Tier 1 (T1)
@@ -310,6 +385,8 @@
 - **Electro Boost** - Teslacoil DMG +50%
 - **Electro Chain** - Teslacoil bounces +1, DMG -15%
 - **Electro Acceleration** - Teslacoil cooldown speed +30%
+
+#### Chain (Cyan)
 - **Charge Expansion** - Teslacoil charge time +0.5s, DMG range increases with charge time
 - **Trap Matrix** - Teslacoil releases Electric Matrix with additional DMG and [Slow] effect for 2s in explosion area
 
@@ -321,18 +398,26 @@
 #### Normal (Cyan)
 - **Charge Destruction** - Teslacoil charge time +0.5s, DMG increases with charge time
 - **Enhanced Matrix** - Electric Matrix DMG +100%, duration +1s
-- **Expanded Shockwave** - Teslacoil explosion range increased, outer DMG halved
 
-#### Chain (Shiny Cyan)
+#### Combo (Shiny Cyan)
+- **Electric Enhancement** *Thunderbolt* - All Electric DMG +80%
+- **Cooperative Beam** *Beam* - During charging, Teslacoil releases 2 Refracted Beams
+
+#### Elite (Purple)
+- **Expanded Shockwave** - Teslacoil explosion range increased, outer DMG halved
 - **Charged Shock** - During the Teslacoil charging time, it releases up to 2 high-energy electric shocks to nearby enemies every 0.25s
-- **Electric Enhancement** - All Electric DMG +80%
-- **Cooperative Beam** - During charging, Teslacoil releases 2 Refracted Beams
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Charge Delayed** - Charge time +1s
 - **Matrix Thunderbolt** - Electro Matrix has a 30% chance to release a stationary Small Thunderbolt for 5s
-- **Spinning Laser** - Teslacoil releases 1 Spinning Laser on hit
+
+#### Combo (Shiny Cyan)
+- **Spinning Laser** *Laser* - Teslacoil releases 1 Spinning Laser on hit
+
+### chain cards
+- **Charge Expansion** (T1) -> **Charge Destruction** (T2) -> **Charge Delayed** (T3)
+- **Trap Matrix** (T1) -> **Enhanced Matrix** (T2) -> **Matrix Thunderbolt** (T3)
 
 ## Gravity Vortex Gun
 ### Tier 1 (T1)
@@ -340,6 +425,8 @@
 - **High Power Field** - Gravitational Field DMG +50%
 - **Wide Field** - Gravitational Field range +25%
 - **Extended Field** - Gravitational Field flight distance +30%
+
+#### Chain (Cyan)
 - **Static Wormhole** - When Gravitational Field hits enemy, a portal is created to teleport enemies to the location where the field disappears for 3s
 - **Small Black Hole** - Creates a small black hole continuously pulling enemies for 5s after the Gravitational Field disappears
 
@@ -348,18 +435,26 @@
 - **Field Amplification** - Gravitational Field DMG +80%, pulling force +100%
 
 ### Tier 2 (T2)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Wormhole Enhancement** - Portal duration (entrance and exit) +100%
 - **Wormhole Expansion** - Portal entry range +100%
 - **Black Hole Expansion** - Small Black Hole range +50%, pulling force +50%
 
+#### Combo (Shiny Cyan)
+- **Field Reflection** *Firewheel Drone* - All Gravitational Fields can reflect
+
 #### Elite (Purple)
 - **Extra Field** - Gravitational Field +1
 - **Extended Range** - Gravitational Field flight distance doubled
-- **Field Reflection** - All Gravitational Fields can reflect
 
 ### Tier 3 (T3)
-#### Normal (Cyan)
+#### Chain (Cyan)
 - **Destructive Black Hole** - Small Black Hole DMG +250%
-- **Field Disruption** - Gravitational Field inflicts [Disruption] effect on hit
-- **Double Fission** - Unlock at Lv.18 - Gravitational Field splits into two small Gravitational Fields at the end
+
+#### Combo (Shiny Cyan)
+- **Field Disruption** *Disruptor Drone* - Gravitational Field inflicts [Disruption] effect on hit
+- **Double Fission** *Railgun* - Gravitational Field splits into two small Gravitational Fields at the end
+
+### chain cards
+- **Static Wormhole** (T1) -> **Wormhole Enhancement** (T2) / **Wormhole Expansion** (T2)
+- **Small Black Hole** (T1) -> **Black Hole Expansion** (T2) -> **Destructive Black Hole** (T3)
