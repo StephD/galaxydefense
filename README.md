@@ -1,71 +1,28 @@
-# Galaxy Defense
+# Contributing to Galaxy Defense
 
-## Project info
+Thank you for your interest in contributing to Galaxy Defense! Here's how you can help:
 
-**URL**: https://galaxydefense.com
+## Getting Started
 
-## How can I edit this code?
+1. Fork the repository
+2. Clone your fork: `git clone https://github.com/YOUR-USERNAME/galaxydefense.git`
+3. Create a branch: `git checkout -b feature/your-feature-name`
 
-There are several ways of editing your application.
+## Making Changes
 
-**Play Galaxy Defense**
+1. Make your changes
+2. Test thoroughly
+3. Commit with clear messages: `git commit -m "feat: add new tower type"`
+4. Push to your fork: `git push origin feature/your-feature-name`
+5. Create a pull request
 
-Simply visit the [Galaxy Defense Game](https://galaxydefense.com) to start playing.
+## Pull Request Guidelines
 
-This repository contains the source code for the Galaxy Defense game.
+- Follow the existing code style
+- Include tests if applicable
+- Update documentation as needed
+- Describe your changes in detail
 
-**Use your preferred IDE**
+## Code of Conduct
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-You can deploy this project using Vercel, Netlify, or any other hosting service that supports Vite applications.
-
-## Can I connect a custom domain to my Galaxy Defense game?
-
-Yes, you can!
-
-To connect a domain, follow the instructions provided by your hosting service. Most services like Vercel and Netlify make it easy to connect custom domains.
+Please be respectful and constructive in all interactions.
