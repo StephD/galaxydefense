@@ -214,11 +214,10 @@ const ChipDatabase = () => {
     "Tower Boost",
     "Tower Ability",
     "Tower DMG",
-    "Ttyp DMG",
+    "Type DMG",
     "Fortress",
     "Conditional DMG",
-    "Game Mechanic",
-    "DMG Type"
+    "Game Mechanic"
   ];
   
   // Handle form submission
