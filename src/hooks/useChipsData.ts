@@ -1,17 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase, safeQuery } from "@/lib/supabase";
+import { TowerType, TowerName } from "./useCardsData";
 
 // Types
 export type GearType = "Armor" | "Helmet" | "Energy Core" | "Boots" | "Shield" | "Weapon";
+export const GEAR_TYPES = ["Armor", "Helmet", "Energy Core", "Boots", "Shield", "Weapon"];
 export type ChipRarity = "Common" | "Fine" | "Rare" | "Epic" | "Legendary" | "Supreme" | "Ultimate";
-export type TowerType = "Guardian" | "Hive" | "Thunderbolt" | "Aeroblast" | "Laser" | "Beam" | "Force-field" | "All";
+export const CHIP_RARITIES = ["Common", "Fine", "Rare", "Epic", "Legendary", "Supreme", "Ultimate"];
 
 export interface ChipBase {
   id: string;
   name: string;
   description: string;
   compatibleGears: GearType[];
-  affectedTowers: TowerType[];
+  affectedTowers: TowerName[];
   boostType: string;
   values: {
     Common?: string;
@@ -135,31 +137,6 @@ export const addChip = async (chip: Omit<ChipBase, 'id'>): Promise<ChipBase> => 
   }
 };
 
-// Hook to get tower types
-export const useTowerTypes = () => {
-  return useQuery({
-    queryKey: ["towerTypes"],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('tower_types')
-          .select('name');
-          
-        if (error) {
-          throw error;
-        }
-        
-        return (data?.map(item => item.name as TowerType) || []) as TowerType[];
-      } catch (error) {
-        console.error('Error fetching tower types:', error);
-        // Fallback data
-        return ["Guardian", "Hive", "Thunderbolt", "Aeroblast", "Laser", "Beam", "Force-field", "All"] as TowerType[];
-      }
-    },
-    staleTime: 60 * 60 * 1000 // 1 hour
-  });
-};
-
 // Hook to get gear types
 export const useGearTypes = () => {
   return useQuery({
@@ -177,7 +154,7 @@ export const useGearTypes = () => {
         return (data?.map(item => item.name as GearType) || []) as GearType[];
       } catch (error) {
         console.error('Error fetching gear types:', error);
-        // Fallback data
+        // Fallback data - hardcoded list of gear types
         return ["Armor", "Helmet", "Energy Core", "Boots", "Shield", "Weapon"] as GearType[];
       }
     },

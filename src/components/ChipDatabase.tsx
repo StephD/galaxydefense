@@ -4,7 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useChipsData, useGearTypes, useTowerTypes, addChip, type ChipRarity, type GearType, type TowerType, type ChipBase } from "@/hooks/useChipsData";
+import { useChipsData, useGearTypes, addChip, type ChipRarity, type GearType, type ChipBase } from "@/hooks/useChipsData";
+import { type TowerType, type TowerName, useTowerNames, useTowerTypes, TowerTypeNames } from "@/hooks/useCardsData";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon, PlusCircle, X, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,17 +19,32 @@ import { useQueryClient } from "@tanstack/react-query";
 const ChipDatabase = () => {
   const { data: chips = [], isLoading: chipsLoading, error: chipsError } = useChipsData();
   const { data: gearTypes = [] } = useGearTypes();
+  const { data: towerNames = [] } = useTowerNames();
   const { data: towerTypes = [] } = useTowerTypes();
   const [selectedGearType, setSelectedGearType] = useState<string>("all");
+  const [selectedTowerName, setSelectedTowerName] = useState<string>("all");
+  const [selectedTowerType, setSelectedTowerType] = useState<string>("all");
+  const [selectedBoostType, setSelectedBoostType] = useState<string>("all");
   const [showAddForm, setShowAddForm] = useState(false);
   const queryClient = useQueryClient();
+  
+  // Column visibility state - only for rarity columns
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
+    Common: false,  // Hidden by default
+    Fine: false,    // Hidden by default
+    Rare: true,
+    Epic: true,
+    Legendary: true,
+    Supreme: true,
+    Ultimate: true
+  });
   
   // Form state for adding a new chip
   const [newChip, setNewChip] = useState<{
     name: string;
     description: string;
     compatibleGears: GearType[];
-    affectedTowers: TowerType[];
+    affectedTowers: TowerName[];
     boostType: string;
     values: Record<ChipRarity, string | undefined>;
   }>({
@@ -48,14 +64,48 @@ const ChipDatabase = () => {
     }
   });
   
-  const filteredChips = useMemo(() => {
-    if (selectedGearType === "all") {
-      return chips;
+  // Helper function to get tower type from tower name
+  const getTowerTypeFromName = (towerName: TowerName): TowerType | undefined => {
+    for (const [towerType, towerNames] of Object.entries(TowerTypeNames)) {
+      if (towerNames.includes(towerName)) {
+        return towerType as TowerType;
+      }
     }
-    return chips.filter(chip => 
-      chip.compatibleGears.includes(selectedGearType as GearType)
-    );
-  }, [chips, selectedGearType]);
+    return undefined;
+  };
+
+  // Filter chips based on selected filters
+  const filteredChips = useMemo(() => {
+    return chips.filter(chip => {
+      // Filter by gear type
+      if (selectedGearType !== "all" && !chip.compatibleGears.includes(selectedGearType as GearType)) {
+        return false;
+      }
+      
+      // Filter by tower name
+      if (selectedTowerName !== "all" && !chip.affectedTowers.includes(selectedTowerName as TowerName)) {
+        return false;
+      }
+
+      // Filter by tower type
+      if (selectedTowerType !== "all") {
+        const hasTowersOfType = chip.affectedTowers.some(tower => {
+          const towerType = getTowerTypeFromName(tower as TowerName);
+          return towerType === selectedTowerType;
+        });
+        if (!hasTowersOfType) {
+          return false;
+        }
+      }
+      
+      // Filter by boost type
+      if (selectedBoostType !== "all" && chip.boostType !== selectedBoostType) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [chips, selectedGearType, selectedTowerName, selectedTowerType, selectedBoostType]);
   
   const getRarityColor = (rarity: ChipRarity) => {
     switch (rarity) {
@@ -82,26 +132,44 @@ const ChipDatabase = () => {
     }
   };
   
-  const getTowerTypeColor = (towerType: TowerType) => {
+  const getTowerTypeColor = (towerType: TowerType | TowerName) => {
+    // Check if it's a tower name first
+    if (typeof towerType === 'string') {
     // Physical towers (sky-blue)
-    if (["Guardian", "Aeroblast"].includes(towerType)) {
+      if (TowerTypeNames.Physical.includes(towerType as TowerName)) {
       return "bg-sky-200 text-sky-800";
     }
     // Energy towers (green)
-    else if (["Laser", "Beam"].includes(towerType)) {
+      else if (TowerTypeNames.Energy.includes(towerType as TowerName)) {
       return "bg-green-300 text-green-800";
     }
     // Electric towers (purple)
-    else if (["Thunderbolt"].includes(towerType)) {
+      else if (TowerTypeNames.Electric.includes(towerType as TowerName)) {
       return "bg-purple-300 text-purple-800";
     }
-    // Force-field towers (Grey-white)
-    else if (["Hive", "Force-field"].includes(towerType)) {
-      return "bg-slate-300 text-slate-800";
+      // Fire towers (blue)
+      else if (TowerTypeNames.Fire.includes(towerType as TowerName)) {
+        return "bg-blue-300 text-blue-800";
     }
-    // All towers
-    else if (towerType === "All") {
-      return "bg-gray-200 text-gray-800";
+      // Force-field towers (Grey-white)
+      else if (TowerTypeNames["Force-field"].includes(towerType as TowerName)) {
+        return "bg-slate-300 text-slate-800";
+      }
+      // All towers
+      else if (towerType === "All") {
+        return "bg-gray-200 text-gray-800";
+      }
+    }
+    // If it's a tower type category
+    else {
+      switch(towerType) {
+        case "Physical": return "bg-sky-200 text-sky-800";
+        case "Energy": return "bg-green-300 text-green-800";
+        case "Electric": return "bg-purple-300 text-purple-800";
+        case "Fire": return "bg-blue-300 text-blue-800";
+        case "Force-field": return "bg-slate-300 text-slate-800";
+        default: return "bg-gray-200 text-gray-800";
+    }
     }
     // Default
     return "bg-gray-200 text-gray-800";
@@ -161,7 +229,7 @@ const ChipDatabase = () => {
       };
       
       // Add chip to database via Supabase
-      const addedChip = await addChip(chipData);
+      const addedChip = await addChip(chipData as ChipBase);
       
       // Update local cache with the new chip
       queryClient.setQueryData(["chips"], (oldData: ChipBase[] | undefined) => {
@@ -210,7 +278,7 @@ const ChipDatabase = () => {
   };
   
   // Toggle tower selection
-  const toggleTower = (tower: TowerType) => {
+  const toggleTower = (tower: TowerName) => {
     if (newChip.affectedTowers.includes(tower)) {
       setNewChip({
         ...newChip,
@@ -284,22 +352,6 @@ const ChipDatabase = () => {
           {showAddForm ? <X className="h-4 w-4" /> : <PlusCircle className="h-4 w-4" />}
           {showAddForm ? "Cancel" : "Add New Chip"}
         </Button>
-        
-        {/* Gear Type Filter */}
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">Filter by Gear Type:</label>
-          <Select value={selectedGearType} onValueChange={setSelectedGearType}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select gear type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Gear Types</SelectItem>
-              {gearTypes.map(type => (
-                <SelectItem key={type} value={type}>{type}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
       </div>
       
       {/* Add Chip Form */}
@@ -377,7 +429,7 @@ const ChipDatabase = () => {
                 <div className="space-y-2">
                   <Label className="block mb-2">Affected Towers *</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {towerTypes.map(tower => (
+                    {towerNames.map(tower => (
                       <div key={tower} className="flex items-center space-x-2">
                         <Checkbox 
                           id={`tower-${tower}`} 
@@ -388,7 +440,7 @@ const ChipDatabase = () => {
                           htmlFor={`tower-${tower}`}
                           className="cursor-pointer flex items-center gap-2"
                         >
-                          <Badge className={getTowerTypeColor(tower)}>{tower}</Badge>
+                          <Badge className={getTowerTypeColor(tower as TowerName)}>{tower}</Badge>
                         </Label>
                       </div>
                     ))}
@@ -426,6 +478,100 @@ const ChipDatabase = () => {
         </Card>
       )}
 
+      {/* Filters and Column Visibility */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+          {/* Gear Type Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">Gear Type:</label>
+            <Select value={selectedGearType} onValueChange={setSelectedGearType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select gear type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Gear Types</SelectItem>
+                {gearTypes.map(type => (
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Tower Name Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">Tower:</label>
+            <Select value={selectedTowerName} onValueChange={setSelectedTowerName}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select tower" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Towers</SelectItem>
+                {towerNames.map(tower => (
+                  <SelectItem key={tower} value={tower}>{tower}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Tower Type Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">Tower Type:</label>
+            <Select value={selectedTowerType} onValueChange={setSelectedTowerType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select tower type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tower Types</SelectItem>
+                {towerTypes.map(type => (
+                  <SelectItem 
+                    key={type} 
+                    value={type}
+                  >
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Boost Type Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">Boost Type:</label>
+            <Select value={selectedBoostType} onValueChange={setSelectedBoostType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select boost type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Boost Types</SelectItem>
+                {boostTypes.map(type => (
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* Rarity Column Visibility */}
+        <div className="flex flex-col gap-1 w-full md:w-auto">
+          <label className="text-sm font-medium">Show Rarity Columns:</label>
+          <div className="flex flex-wrap gap-2">
+            {rarities.map(rarity => (
+              <Badge 
+                key={rarity} 
+                variant={visibleColumns[rarity] ? "default" : "outline"}
+                className={cn(
+                  "cursor-pointer",
+                  visibleColumns[rarity] ? getRarityColor(rarity) : ""
+                )}
+                onClick={() => setVisibleColumns(prev => ({ ...prev, [rarity]: !prev[rarity] }))}
+              >
+                {rarity}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </div>
+      
       {/* Results Count */}
       <div className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">
@@ -448,11 +594,13 @@ const ChipDatabase = () => {
                   <TableHead className="whitespace-nowrap">Towers</TableHead>
                   <TableHead className="whitespace-nowrap">Boost Type</TableHead>
                   {rarities.map(rarity => (
-                    <TableHead key={rarity} className="whitespace-nowrap">
-                      <Badge className={getRarityColor(rarity)}>
-                        {rarity}
-                      </Badge>
-                    </TableHead>
+                    visibleColumns[rarity] && (
+                      <TableHead key={rarity} className="whitespace-nowrap">
+                        <Badge className={getRarityColor(rarity)}>
+                          {rarity}
+                        </Badge>
+                      </TableHead>
+                    )
                   ))}
                 </TableRow>
               </TableHeader>
@@ -472,15 +620,17 @@ const ChipDatabase = () => {
                         </Tooltip>
                       </TooltipProvider>
                     </TableCell>
+                    
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {chip.compatibleGears.map(gear => (
-                          <Badge key={gear} variant="outline">
+                          <Badge key={gear} className="bg-gray-100 text-gray-800">
                             {gear}
                           </Badge>
                         ))}
                       </div>
                     </TableCell>
+                    
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {chip.affectedTowers.map(tower => (
@@ -490,21 +640,26 @@ const ChipDatabase = () => {
                         ))}
                       </div>
                     </TableCell>
+                    
                     <TableCell className="whitespace-nowrap">{chip.boostType}</TableCell>
+                    
                     {rarities.map(rarity => (
-                      <TableCell key={rarity} className="text-center">
-                        {chip.values[rarity] !== undefined ? (
-                          <span className={cn(
-                            "font-medium",
-                            rarity === "Ultimate" && "text-primary"
-                          )}>
-                            {chip.values[rarity]}
-                            {chip.boostType.includes("DMG") && "%"}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
+                      visibleColumns[rarity] && (
+                        <TableCell key={rarity} className="text-center">
+                          <div className="flex justify-center items-center">
+                            {chip.values[rarity] !== undefined ? (
+                              <span className={cn(
+                                "font-medium",
+                                rarity === "Ultimate" && "text-primary"
+                              )}>
+                                {chip.values[rarity]}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </div>
+                        </TableCell>
+                      )
                     ))}
                   </TableRow>
                 ))}
