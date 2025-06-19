@@ -18,19 +18,22 @@ const HeroSection = () => {
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
             Welcome to Galaxy Defense - the ultimate space strategy game.
-            Defend your galaxy, upgrade your fleet, and conquer the universe.
+            Defend your galaxy, upgrade your towers, and conquer the universe.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link to="/database" className="flex items-center space-x-2">
-                <span>Explore Database</span>
+            <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6">
+              <Link to="/cards" className="flex items-center space-x-2">
+                <span>Card Database</span>
                 <ChevronRight className="h-5 w-5" />
               </Link>
             </Button>
             
-            <Button variant="outline" size="lg" className="text-lg px-8 py-6">
-              Play Now
+            <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6">
+              <Link to="/chips" className="flex items-center space-x-2">
+                <span>Chips Database</span>
+                <ChevronRight className="h-5 w-5" />
+              </Link>
             </Button>
           </div>
         </div>

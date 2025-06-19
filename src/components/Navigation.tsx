@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Database, Home } from "lucide-react";
+import { Database, Home, Cpu } from "lucide-react";
 
 const Navigation = () => {
   return (
@@ -17,11 +17,18 @@ const Navigation = () => {
           
           <div className="flex items-center space-x-6">
             <Link 
-              to="/database" 
+              to="/cards" 
               className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
             >
               <Database className="h-4 w-4" />
-              <span>Database</span>
+              <span>Cards</span>
+            </Link>
+            <Link 
+              to="/chips" 
+              className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
+            >
+              <Cpu className="h-4 w-4" />
+              <span>Chips</span>
             </Link>
           </div>
         </div>
