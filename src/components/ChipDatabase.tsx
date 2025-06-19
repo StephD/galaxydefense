@@ -15,12 +15,14 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ChipDatabase = () => {
   const { data: chips = [], isLoading: chipsLoading, error: chipsError } = useChipsData();
   const { data: gearTypes = [] } = useGearTypes();
   const { data: towerNames = [] } = useTowerNames();
   const { data: towerTypes = [] } = useTowerTypes();
+  const { user } = useAuth();
   const [selectedGearType, setSelectedGearType] = useState<string>("all");
   const [selectedTowerName, setSelectedTowerName] = useState<string>("all");
   const [selectedTowerType, setSelectedTowerType] = useState<string>("all");
@@ -31,6 +33,7 @@ const ChipDatabase = () => {
   const [selectedChipToUpdate, setSelectedChipToUpdate] = useState<ChipBase | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const isAuthenticated = !!user;
   
   // Column visibility state - only for rarity columns
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
@@ -369,16 +372,38 @@ const ChipDatabase = () => {
   
   // Toggle tower selection
   const toggleTower = (tower: TowerName) => {
-    if (newChip.affectedTowers.includes(tower)) {
-      setNewChip({
-        ...newChip,
-        affectedTowers: newChip.affectedTowers.filter(t => t !== tower)
-      });
+    if (tower === "All") {
+      if (newChip.affectedTowers.includes("All" as TowerName)) {
+        // If "All" is being unchecked, just remove it
+        setNewChip({
+          ...newChip,
+          affectedTowers: newChip.affectedTowers.filter(t => t !== "All")
+        });
+      } else {
+        // If "All" is being checked, make it the only selection
+        setNewChip({
+          ...newChip,
+          affectedTowers: ["All" as TowerName]
+        });
+      }
     } else {
-      setNewChip({
-        ...newChip,
-        affectedTowers: [...newChip.affectedTowers, tower]
-      });
+      // If "All" is already selected, don't allow other selections
+      if (newChip.affectedTowers.includes("All" as TowerName)) {
+        return;
+      }
+      
+      // Normal toggle behavior for other towers
+      if (newChip.affectedTowers.includes(tower)) {
+        setNewChip({
+          ...newChip,
+          affectedTowers: newChip.affectedTowers.filter(t => t !== tower)
+        });
+      } else {
+        setNewChip({
+          ...newChip,
+          affectedTowers: [...newChip.affectedTowers, tower]
+        });
+      }
     }
   };
   
@@ -435,38 +460,42 @@ const ChipDatabase = () => {
       {/* Action Buttons */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
-          <Button 
-            onClick={() => {
-              setShowAddForm(!showAddForm);
-              if (showUpdateForm) setShowUpdateForm(false);
-              if (!showAddForm) resetForm();
-            }} 
-            variant={showAddForm ? "destructive" : "default"}
-            className="flex items-center gap-2"
-          >
-            {showAddForm ? <X className="h-4 w-4" /> : <PlusCircle className="h-4 w-4" />}
-            {showAddForm ? "Cancel" : "Add New Chip"}
-          </Button>
-          
-          <Button 
-            onClick={() => {
-              setShowUpdateForm(!showUpdateForm);
-              if (showAddForm) setShowAddForm(false);
-              if (!showUpdateForm) {
-                resetForm();
-                setSelectedChipToUpdate(null);
-                setChipSearchQuery("");
-              }
-            }} 
-            variant={showUpdateForm ? "destructive" : "default"}
-            className="flex items-center gap-2"
-          >
-            {showUpdateForm ? <X className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
-            {showUpdateForm ? "Cancel" : "Update Chip"}
-          </Button>
+          {isAuthenticated && (
+            <>
+              <Button 
+                onClick={() => {
+                  setShowAddForm(!showAddForm);
+                  if (showUpdateForm) setShowUpdateForm(false);
+                  if (!showAddForm) resetForm();
+                }} 
+                variant={showAddForm ? "destructive" : "default"}
+                className="flex items-center gap-2"
+              >
+                {showAddForm ? <X className="h-4 w-4" /> : <PlusCircle className="h-4 w-4" />}
+                {showAddForm ? "Cancel" : "Add New Chip"}
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  setShowUpdateForm(!showUpdateForm);
+                  if (showAddForm) setShowAddForm(false);
+                  if (!showUpdateForm) {
+                    resetForm();
+                    setSelectedChipToUpdate(null);
+                    setChipSearchQuery("");
+                  }
+                }} 
+                variant={showUpdateForm ? "destructive" : "default"}
+                className="flex items-center gap-2"
+              >
+                {showUpdateForm ? <X className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+                {showUpdateForm ? "Cancel" : "Update Chip"}
+              </Button>
+            </>  
+          )}
           
           {/* Search input for chips */}
-          {showUpdateForm && (
+          {isAuthenticated && showUpdateForm && (
             <div className="relative ml-2 w-64" ref={searchRef}>
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search className="h-4 w-4 text-muted-foreground" />
@@ -582,16 +611,33 @@ const ChipDatabase = () => {
                 <div className="space-y-2">
                   <Label className="block mb-2">Affected Towers *</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {towerNames.map(tower => (
+                    {/* Special "All" option at the top */}
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="tower-All" 
+                        checked={newChip.affectedTowers.includes("All" as TowerName)}
+                        onCheckedChange={() => toggleTower("All" as TowerName)}
+                      />
+                      <Label 
+                        htmlFor="tower-All"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <Badge className="bg-purple-300 text-purple-800 font-bold">All</Badge>
+                      </Label>
+                    </div>
+                    
+                    {/* Other tower options */}
+                    {towerNames.filter(tower => tower !== "All").map(tower => (
                       <div key={tower} className="flex items-center space-x-2">
                         <Checkbox 
                           id={`tower-${tower}`} 
                           checked={newChip.affectedTowers.includes(tower)}
                           onCheckedChange={() => toggleTower(tower)}
+                          disabled={newChip.affectedTowers.includes("All" as TowerName)}
                         />
                         <Label 
                           htmlFor={`tower-${tower}`}
-                          className="cursor-pointer flex items-center gap-2"
+                          className={`cursor-pointer flex items-center gap-2 ${newChip.affectedTowers.includes("All" as TowerName) ? "opacity-50" : ""}`}
                         >
                           <Badge className={getTowerTypeColor(tower as TowerName)}>{tower}</Badge>
                         </Label>
@@ -706,16 +752,33 @@ const ChipDatabase = () => {
                 <div className="space-y-2">
                   <Label className="block mb-2">Affected Towers *</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {towerNames.map(tower => (
+                    {/* Special "All" option at the top */}
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="update-tower-All" 
+                        checked={newChip.affectedTowers.includes("All" as TowerName)}
+                        onCheckedChange={() => toggleTower("All" as TowerName)}
+                      />
+                      <Label 
+                        htmlFor="update-tower-All"
+                        className="cursor-pointer flex items-center gap-2"
+                      >
+                        <Badge className="bg-purple-300 text-purple-800 font-bold">All</Badge>
+                      </Label>
+                    </div>
+                    
+                    {/* Other tower options */}
+                    {towerNames.filter(tower => tower !== "All").map(tower => (
                       <div key={tower} className="flex items-center space-x-2">
                         <Checkbox 
                           id={`update-tower-${tower}`} 
                           checked={newChip.affectedTowers.includes(tower)}
                           onCheckedChange={() => toggleTower(tower)}
+                          disabled={newChip.affectedTowers.includes("All" as TowerName)}
                         />
                         <Label 
                           htmlFor={`update-tower-${tower}`}
-                          className="cursor-pointer flex items-center gap-2"
+                          className={`cursor-pointer flex items-center gap-2 ${newChip.affectedTowers.includes("All" as TowerName) ? "opacity-50" : ""}`}
                         >
                           <Badge className={getTowerTypeColor(tower as TowerName)}>{tower}</Badge>
                         </Label>
@@ -922,7 +985,7 @@ const ChipDatabase = () => {
                       <div className="flex flex-wrap gap-1">
                         {chip.compatibleGears.map(gear => (
                           <Badge key={gear} className="bg-gray-100 text-gray-800">
-                            {gear}
+                            {gear.charAt(0).toUpperCase()}
                           </Badge>
                         ))}
                       </div>

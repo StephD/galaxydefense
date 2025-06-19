@@ -10,21 +10,6 @@ export const TOWER_TYPES_COLOR = {
   "Fire": "bg-amber-300 text-amber-800",
   "Force-field": "bg-indigo-300 text-indigo-800"
 };
-export const TOWER_NAMES_COLOR = {
-  "Railgun": "bg-sky-200 text-sky-800",
-  "Guardian": "bg-green-300 text-green-800",
-  "Aeroblast": "bg-purple-300 text-purple-800",
-  "Laser": "bg-amber-300 text-amber-800",
-  "Beam": "bg-indigo-300 text-indigo-800",
-  "Thunderbolt": "bg-sky-200 text-sky-800",
-  "Teslacoil": "bg-green-300 text-green-800",
-  "Sky Guard": "bg-purple-300 text-purple-800",
-  "Firewheel Drone": "bg-amber-300 text-amber-800",
-  "Gravity Vortex Gun": "bg-indigo-300 text-indigo-800",
-  "Disruption Drone": "bg-sky-200 text-sky-800",
-  "Hive": "bg-green-300 text-green-800",
-  "All": "bg-purple-300 text-purple-800"
-};
 
 // Actual Tower Names
 export type TowerName = 
@@ -41,6 +26,24 @@ export type TowerName =
   | "Disruption Drone" 
   | "Hive" 
   | "All";
+
+export type TowerNickname = "Rail" | "Guard" | "Aero" | "Las" | "Beam" | "Thund" | "Tesla" | "Sky" | "FireW" | "Gravity" | "Disrupt" | "Hive" |  "All";
+
+export const TOWER_NAMES_COLOR = {
+  "Railgun": "bg-sky-200 text-sky-800",
+  "Guardian": "bg-green-300 text-green-800",
+  "Aeroblast": "bg-purple-300 text-purple-800",
+  "Laser": "bg-amber-300 text-amber-800",
+  "Beam": "bg-indigo-300 text-indigo-800",
+  "Thunderbolt": "bg-sky-200 text-sky-800",
+  "Teslacoil": "bg-green-300 text-green-800",
+  "Sky Guard": "bg-purple-300 text-purple-800",
+  "Firewheel Drone": "bg-amber-300 text-amber-800",
+  "Gravity Vortex Gun": "bg-indigo-300 text-indigo-800",
+  "Disruption Drone": "bg-sky-200 text-sky-800",
+  "Hive": "bg-green-300 text-green-800",
+  "All": "bg-purple-300 text-purple-800"
+};
 
 // Tower Type to Tower Name mapping
 export const TowerTypeNames: Record<TowerType, TowerName[]> = {

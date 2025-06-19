@@ -4,8 +4,8 @@ import { TowerType, TowerName } from "./useCardsData";
 
 // Types
 export type GearType = "Armor" | "Helmet" | "Energy Core" | "Boots" | "Shield" | "Weapon";
-export const GEAR_TYPES = ["Armor", "Helmet", "Energy Core", "Boots", "Shield", "Weapon"];
 export type ChipRarity = "Common" | "Fine" | "Rare" | "Epic" | "Legendary" | "Supreme" | "Ultimate";
+export const GEAR_TYPES = ["Armor", "Helmet", "Energy Core", "Boots", "Shield", "Weapon"];
 export const CHIP_RARITIES = ["Common", "Fine", "Rare", "Epic", "Legendary", "Supreme", "Ultimate"];
 
 export interface ChipBase {
