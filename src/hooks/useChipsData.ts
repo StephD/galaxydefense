@@ -137,6 +137,62 @@ export const addChip = async (chip: Omit<ChipBase, 'id'>): Promise<ChipBase> => 
   }
 };
 
+// Function to update an existing chip
+export const updateChip = async (chipId: string, chip: Partial<ChipBase>): Promise<ChipBase> => {
+  try {
+    // Prepare the data for Supabase
+    const chipData: Record<string, any> = {};
+    
+    if (chip.name !== undefined) chipData.name = chip.name;
+    if (chip.description !== undefined) chipData.description = chip.description;
+    if (chip.compatibleGears !== undefined) chipData.compatible_gears = chip.compatibleGears;
+    if (chip.affectedTowers !== undefined) chipData.affected_towers = chip.affectedTowers;
+    if (chip.boostType !== undefined) chipData.boost_type = chip.boostType;
+    
+    // Handle values separately to only update what's provided
+    if (chip.values) {
+      if (chip.values.Common !== undefined) chipData.value_common = chip.values.Common;
+      if (chip.values.Fine !== undefined) chipData.value_fine = chip.values.Fine;
+      if (chip.values.Rare !== undefined) chipData.value_rare = chip.values.Rare;
+      if (chip.values.Epic !== undefined) chipData.value_epic = chip.values.Epic;
+      if (chip.values.Legendary !== undefined) chipData.value_legendary = chip.values.Legendary;
+      if (chip.values.Supreme !== undefined) chipData.value_supreme = chip.values.Supreme;
+      if (chip.values.Ultimate !== undefined) chipData.value_ultimate = chip.values.Ultimate;
+    }
+    
+    const { data, error } = await supabase
+      .from('chips')
+      .update(chipData)
+      .eq('id', chipId)
+      .select()
+      .single();
+      
+    if (error) throw error;
+    
+    // Transform the response back to the ChipBase format
+    return {
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      compatibleGears: data.compatible_gears,
+      affectedTowers: data.affected_towers,
+      boostType: data.boost_type,
+      values: {
+        Common: data.value_common || undefined,
+        Fine: data.value_fine || undefined,
+        Rare: data.value_rare || undefined,
+        Epic: data.value_epic || undefined,
+        Legendary: data.value_legendary || undefined,
+        Supreme: data.value_supreme || undefined,
+        Ultimate: data.value_ultimate || undefined
+      }
+    };
+  } catch (error) {
+    console.error('Error updating chip:', error);
+    throw error;
+  }
+};
+
 // Hook to get gear types
 export const useGearTypes = () => {
   return useQuery({
