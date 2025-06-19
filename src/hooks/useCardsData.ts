@@ -27,7 +27,7 @@ export type TowerName =
   | "Hive" 
   | "All";
 
-export type TowerNickname = "Rail" | "Guard" | "Aero" | "Las" | "Beam" | "Thund" | "Tesla" | "Sky" | "FireW" | "Gravity" | "Disrupt" | "Hive" |  "All";
+export type TowerNickname = "Railgun" | "Guardian" | "AeroB" | "Laser" | "Beam" | "Thunder" | "Tesla" | "SkyG" | "FireW" | "Gravity" | "DisruptD" | "Hive" |  "All";
 
 export const TOWER_NAMES_COLOR = {
   "Railgun": "bg-sky-200 text-sky-800",

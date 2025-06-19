@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useChipsData, useGearTypes, ChipBase, GearType, ChipRarity, addChip, updateChip } from "@/hooks/useChipsData";
-import { type TowerType, type TowerName, useTowerNames, useTowerTypes, TowerTypeNames } from "@/hooks/useCardsData";
+import { type TowerType, type TowerName, type TowerNickname, useTowerNames, useTowerTypes, TowerTypeNames } from "@/hooks/useCardsData";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon, PlusCircle, X, Check, ChevronDown, ChevronUp, Edit, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,28 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+
+// Tower name to nickname mapping
+const towerNicknameMap: Record<TowerName, TowerNickname> = {
+  "Railgun": "Railgun",
+  "Guardian": "Guardian",
+  "Aeroblast": "AeroB",
+  "Laser": "Laser",
+  "Beam": "Beam",
+  "Thunderbolt": "Thunder",
+  "Teslacoil": "Tesla",
+  "Sky Guard": "SkyG",
+  "Firewheel Drone": "FireW",
+  "Gravity Vortex Gun": "Gravity",
+  "Disruption Drone": "DisruptD",
+  "Hive": "Hive",
+  "All": "All"
+};
+
+// Function to get tower nickname from tower name
+const getTowerNickname = (towerName: TowerName): TowerNickname => {
+  return towerNicknameMap[towerName] || towerName as unknown as TowerNickname;
+};
 
 const ChipDatabase = () => {
   const { data: chips = [], isLoading: chipsLoading, error: chipsError } = useChipsData();
@@ -192,6 +214,7 @@ const ChipDatabase = () => {
     "Tower Boost",
     "Tower Ability",
     "Tower DMG",
+    "Ttyp DMG",
     "Fortress",
     "Conditional DMG",
     "Game Mechanic",
@@ -409,11 +432,8 @@ const ChipDatabase = () => {
   
   // Update rarity value
   const updateRarityValue = (rarity: ChipRarity, value: string) => {
-    // Format the value appropriately, respecting negative values
-    const formattedValue = value === "" ? undefined : 
-      value.startsWith('+') || value.startsWith('-') ? value : // Keep as is if already has sign
-      value.includes('%') ? value : // Keep as is if already has %
-      `+${value}`; // Add + prefix only for positive values without sign
+    // Format the value appropriately, respecting negative values but allowing plain numbers
+    const formattedValue = value === "" ? undefined : value; // Keep the value as entered without forcing a + sign
     
     setNewChip({
       ...newChip,
@@ -994,9 +1014,18 @@ const ChipDatabase = () => {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {chip.affectedTowers.map(tower => (
-                          <Badge key={tower} className={getTowerTypeColor(tower)}>
-                            {tower}
-                          </Badge>
+                          <TooltipProvider key={tower}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Badge className={getTowerTypeColor(tower)}>
+                                  {getTowerNickname(tower as TowerName)}
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{tower}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         ))}
                       </div>
                     </TableCell>
@@ -1009,9 +1038,9 @@ const ChipDatabase = () => {
                           <div className="flex justify-center items-center">
                             {chip.values[rarity] !== undefined ? (
                               <span className={cn(
-                                "font-medium align-middle",
+                                "font-medium align-middle whitespace-nowrap overflow-hidden text-ellipsis",
                                 rarity === "Ultimate" && "text-primary"
-                              )}>
+                              )} title={chip.values[rarity]}>
                                 {chip.values[rarity]}
                               </span>
                             ) : (
