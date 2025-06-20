@@ -105,7 +105,8 @@ const ChipDatabase = () => {
 
   // Filter chips based on selected filters
   const filteredChips = useMemo(() => {
-    return chips.filter(chip => {
+    // First filter the chips
+    const filtered = chips.filter(chip => {
       // Filter by gear type
       if (selectedGearType !== "all" && !chip.compatibleGears.includes(selectedGearType as GearType)) {
         return false;
@@ -133,6 +134,16 @@ const ChipDatabase = () => {
       }
       
       return true;
+    });
+    
+    // Then sort by boost type first, then by name
+    return filtered.sort((a, b) => {
+      // First sort by boost type
+      if (a.boostType < b.boostType) return -1;
+      if (a.boostType > b.boostType) return 1;
+      
+      // If boost types are the same, sort by name
+      return a.name.localeCompare(b.name);
     });
   }, [chips, selectedGearType, selectedTurretName, selectedTurretType, selectedBoostType]);
   
@@ -958,7 +969,7 @@ const ChipDatabase = () => {
                   <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px]">Boost Type</TableHead>
                   {rarities.map(rarity => (
                     visibleColumns[rarity] && (
-                      <TableHead key={rarity} className="whitespace-nowrap">
+                      <TableHead key={rarity} className="whitespace-nowrap text-center">
                         <Badge className={getRarityColor(rarity)}>
                           {rarity}
                         </Badge>
