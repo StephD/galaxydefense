@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase, safeQuery } from "@/lib/supabase";
-import { TowerType, TowerName } from "./useCardsData";
+import { TurretType, TurretName } from "./useCardsData";
 
 // Types
 export type GearType = "Armor" | "Helmet" | "Energy Core" | "Boots" | "Shield" | "Weapon";
@@ -13,7 +13,7 @@ export interface ChipBase {
   name: string;
   description: string;
   compatibleGears: GearType[];
-  affectedTowers: TowerName[];
+  affectedTurrets: TurretName[];
   boostType: string;
   values: {
     Common?: string;
@@ -62,7 +62,7 @@ const getChipData = async (): Promise<ChipBase[]> => {
         name: chip.name,
         description: chip.description,
         compatibleGears: chip.compatible_gears,
-        affectedTowers: chip.affected_towers,
+        affectedTurrets: chip.affected_turrets,
         boostType: chip.boost_type,
         values
       } as ChipBase;
@@ -94,7 +94,7 @@ export const addChip = async (chip: Omit<ChipBase, 'id'>): Promise<ChipBase> => 
       name: chip.name,
       description: chip.description,
       compatible_gears: chip.compatibleGears,
-      affected_towers: chip.affectedTowers,
+      affected_turrets: chip.affectedTurrets,
       boost_type: chip.boostType,
       value_common: chip.values.Common,
       value_fine: chip.values.Fine,
@@ -119,7 +119,7 @@ export const addChip = async (chip: Omit<ChipBase, 'id'>): Promise<ChipBase> => 
       name: data.name,
       description: data.description,
       compatibleGears: data.compatible_gears,
-      affectedTowers: data.affected_towers,
+      affectedTurrets: data.affected_turrets,
       boostType: data.boost_type,
       values: {
         Common: data.value_common || undefined,
@@ -146,7 +146,7 @@ export const updateChip = async (chipId: string, chip: Partial<ChipBase>): Promi
     if (chip.name !== undefined) chipData.name = chip.name;
     if (chip.description !== undefined) chipData.description = chip.description;
     if (chip.compatibleGears !== undefined) chipData.compatible_gears = chip.compatibleGears;
-    if (chip.affectedTowers !== undefined) chipData.affected_towers = chip.affectedTowers;
+    if (chip.affectedTurrets !== undefined) chipData.affected_turrets = chip.affectedTurrets;
     if (chip.boostType !== undefined) chipData.boost_type = chip.boostType;
     
     // Handle values separately to only update what's provided
@@ -175,7 +175,7 @@ export const updateChip = async (chipId: string, chip: Partial<ChipBase>): Promi
       name: data.name,
       description: data.description,
       compatibleGears: data.compatible_gears,
-      affectedTowers: data.affected_towers,
+      affectedTurrets: data.affected_turrets,
       boostType: data.boost_type,
       values: {
         Common: data.value_common || undefined,

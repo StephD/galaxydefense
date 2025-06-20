@@ -11,47 +11,47 @@ export type Database = {
     Tables: {
       cards: {
         Row: {
-          combo_tower_id: string | null
+          combo_turret_id: string | null
           created_at: string
           description: string | null
           id: string
           name: string
           parent_card_id: string | null
           tier: Database["public"]["Enums"]["tier_type"]
-          tower_id: string
+          turret_id: string
           type: Database["public"]["Enums"]["card_type"]
           updated_at: string
         }
         Insert: {
-          combo_tower_id?: string | null
+          combo_turret_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
           name: string
           parent_card_id?: string | null
           tier: Database["public"]["Enums"]["tier_type"]
-          tower_id: string
+          turret_id: string
           type: Database["public"]["Enums"]["card_type"]
           updated_at?: string
         }
         Update: {
-          combo_tower_id?: string | null
+          combo_turret_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
           name?: string
           parent_card_id?: string | null
           tier?: Database["public"]["Enums"]["tier_type"]
-          tower_id?: string
+          turret_id?: string
           type?: Database["public"]["Enums"]["card_type"]
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "cards_combo_tower_id_fkey"
-            columns: ["combo_tower_id"]
+            foreignKeyName: "cards_combo_turret_id_fkey"
+            columns: ["combo_turret_id"]
             isOneToOne: false
-            referencedRelation: "towers"
+            referencedRelation: "turrets"
             referencedColumns: ["id"]
           },
           {
@@ -62,15 +62,15 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "cards_tower_id_fkey"
-            columns: ["tower_id"]
+            foreignKeyName: "cards_turret_id_fkey"
+            columns: ["turret_id"]
             isOneToOne: false
-            referencedRelation: "towers"
+            referencedRelation: "turrets"
             referencedColumns: ["id"]
           },
         ]
       }
-      towers: {
+      turrets: {
         Row: {
           atk_range: string | null
           cooldown: number | null

@@ -13,7 +13,7 @@ const Cards = () => {
             Cards
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore all available cards. Filter by tower type, card category, and tier to find the perfect combination.
+            Explore all available cards. Filter by turret type, card category, and tier to find the perfect combination.
           </p>
         </div>
 

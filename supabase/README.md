@@ -6,9 +6,9 @@ This directory contains the SQL migrations for setting up the Galaxy Defense dat
 
 The database consists of three main tables:
 
-1. `chips` - Stores all chip data including name, description, compatible gear types, affected tower types, boost type, and values per rarity level
+1. `chips` - Stores all chip data including name, description, compatible gear types, affected turret types, boost type, and values per rarity level
 2. `gear_types` - Stores the available gear types
-3. `tower_types` - Stores the available tower types
+3. `turret_types` - Stores the available turret types
 
 ## Setting Up Supabase
 
@@ -43,7 +43,7 @@ Each chip has the following structure:
 - `name`: Text (chip name)
 - `description`: Text (chip description)
 - `compatible_gears`: Text array (list of compatible gear types)
-- `affected_towers`: Text array (list of affected tower types)
+- `affected_turrets`: Text array (list of affected turret types)
 - `boost_type`: Text (type of boost provided)
 - `values`: JSONB (object with values for each rarity level)
 - `created_at`: Timestamp

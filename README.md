@@ -12,7 +12,7 @@ Thank you for your interest in contributing to Galaxy Defense! Here's how you ca
 
 1. Make your changes
 2. Test thoroughly
-3. Commit with clear messages: `git commit -m "feat: add new tower type"`
+3. Commit with clear messages: `git commit -m "feat: add new turret type"`
 4. Push to your fork: `git push origin feature/your-feature-name`
 5. Create a pull request
 

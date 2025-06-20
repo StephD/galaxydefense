@@ -18,7 +18,7 @@ const HeroSection = () => {
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
             Welcome to Galaxy Defense - the ultimate space strategy game.
-            Defend your galaxy, upgrade your towers, and conquer the universe.
+            Defend your galaxy, upgrade your turrets, and conquer the universe.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
