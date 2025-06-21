@@ -18,6 +18,7 @@ const CardDatabase = () => {
   const [selectedTurrets, setSelectedTurrets] = useState<string[]>([]);
   const [selectedCardType, setSelectedCardType] = useState<string>("all");
   const [selectedTier, setSelectedTier] = useState<string>("all");
+  const [selectedComboTurret, setSelectedComboTurret] = useState<string>("all");
 
   // Define turret order for sorting
   const turretOrder = [
@@ -70,7 +71,11 @@ const CardDatabase = () => {
       // Tier filter
       const tierMatch = selectedTier === "all" || card.tier === selectedTier;
       
-      return turretMatch && typeMatch && tierMatch;
+      // Combo turret filter
+      const comboTurretMatch = selectedComboTurret === "all" || 
+        (card.combo_turret && card.combo_turret.name === selectedComboTurret);
+      
+      return turretMatch && typeMatch && tierMatch && comboTurretMatch;
     });
     
     // Then sort them by turret order, then by tier, then by type
@@ -225,6 +230,22 @@ const CardDatabase = () => {
               <SelectItem value="all">All Tiers</SelectItem>
               {tiers.map(tier => (
                 <SelectItem key={tier} value={tier}>{tier}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Combo Turret Filter */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Filter by Combo Turret</label>
+          <Select value={selectedComboTurret} onValueChange={setSelectedComboTurret}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select combo turret" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Combo Turrets</SelectItem>
+              {sortedTurrets.map(turret => (
+                <SelectItem key={`combo-${turret.name}`} value={turret.name}>{turret.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
