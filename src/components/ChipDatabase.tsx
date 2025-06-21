@@ -49,6 +49,7 @@ const ChipDatabase = () => {
   const [selectedTurretName, setSelectedTurretName] = useState<string>("all");
   const [selectedTurretType, setSelectedTurretType] = useState<string>("all");
   const [selectedBoostType, setSelectedBoostType] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [chipSearchQuery, setChipSearchQuery] = useState("");
@@ -133,6 +134,16 @@ const ChipDatabase = () => {
         return false;
       }
       
+      // Filter by search query
+      if (searchQuery.trim() !== "") {
+        const query = searchQuery.toLowerCase().trim();
+        const nameMatch = chip.name.toLowerCase().includes(query);
+        const descriptionMatch = chip.description.toLowerCase().includes(query);
+        if (!nameMatch && !descriptionMatch) {
+          return false;
+        }
+      }
+      
       return true;
     });
     
@@ -145,7 +156,7 @@ const ChipDatabase = () => {
       // If boost types are the same, sort by name
       return a.name.localeCompare(b.name);
     });
-  }, [chips, selectedGearType, selectedTurretName, selectedTurretType, selectedBoostType]);
+  }, [chips, selectedGearType, selectedTurretName, selectedTurretType, selectedBoostType, searchQuery]);
   
   const getRarityColor = (rarity: ChipRarity) => {
     switch (rarity) {
@@ -490,7 +501,7 @@ const ChipDatabase = () => {
       {/* Action Buttons */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
-          {isAuthenticated && (
+          {/* {isAuthenticated && (
             <>
               <Button 
                 onClick={() => {
@@ -522,10 +533,10 @@ const ChipDatabase = () => {
                 {showUpdateForm ? "Cancel" : "Update Chip"}
               </Button>
             </>  
-          )}
+          )} */}
           
           {/* Search input for chips */}
-          {isAuthenticated && showUpdateForm && (
+          {/* {isAuthenticated && showUpdateForm && (
             <div className="relative ml-2 w-64" ref={searchRef}>
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search className="h-4 w-4 text-muted-foreground" />
@@ -537,7 +548,7 @@ const ChipDatabase = () => {
                 className="pl-10 w-full"
               />
               
-              {/* Search results dropdown */}
+              {/* Search results dropdown *}
               {chipSearchQuery && searchResults.length > 0 && (
                 <div className="absolute z-10 mt-1 w-full border rounded-md overflow-hidden bg-background shadow-md">
                   {searchResults.map(chip => (
@@ -562,7 +573,7 @@ const ChipDatabase = () => {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
       </div>
       
@@ -852,7 +863,25 @@ const ChipDatabase = () => {
         </Card>
       )}
 
+
+
       {/* Filters and Column Visibility */}
+      <div className="flex flex-col md:flex-row gap-4 mb-4">
+        {/* Search Filter */}
+        <div className="flex flex-col gap-2 w-full">
+          <label className="text-sm font-medium">Search Chips</label>
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:flex md:flex-row gap-3 w-full md:w-auto">
           {/* Gear Type Filter */}
@@ -990,7 +1019,7 @@ const ChipDatabase = () => {
                               <InfoIcon className="h-4 w-4 text-muted-foreground" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="max-w-xs">{chip.description}</p>
+                              <p className="">{chip.description}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
