@@ -8,7 +8,7 @@ import { useChipsData, useGearTypes, ChipBase, GearType, ChipRarity, addChip, up
 import { type TurretType, type TurretName, type TurretNickname, useTurretNames, useTurretTypes, TurretTypeNames } from "@/hooks/useCardsData";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { InfoIcon, PlusCircle, X, Check, ChevronDown, ChevronUp, Edit, Search } from "lucide-react";
+import { InfoIcon, PlusCircle, X, Check, ChevronDown, ChevronUp, Edit, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -561,7 +561,25 @@ const ChipDatabase = () => {
                       )}
                       onClick={() => handleSelectChipToUpdate(chip)}
                     >
-                      <div className="font-medium">{chip.name}</div>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {chip.name}
+                          {chip.valuable && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span>
+                                    <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Valuable Chip</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
+                      </TableCell>
                       <div className="text-sm text-muted-foreground truncate">{chip.description}</div>
                     </div>
                   ))}
@@ -1024,6 +1042,20 @@ const ChipDatabase = () => {
                             <p className="text-sm">{chip.description}</p>
                           </PopoverContent>
                         </Popover>
+                        {chip.valuable && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Valuable Chip</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
                         {user && (
                           <Button 
                             variant="ghost" 

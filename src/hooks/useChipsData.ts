@@ -15,6 +15,7 @@ export interface ChipBase {
   compatibleGears: GearType[];
   affectedTurrets: TurretName[];
   boostType: string;
+  valuable?: boolean;
   values: {
     Common?: string;
     Fine?: string;
@@ -64,6 +65,7 @@ const getChipData = async (): Promise<ChipBase[]> => {
         compatibleGears: chip.compatible_gears,
         affectedTurrets: chip.affected_turrets,
         boostType: chip.boost_type,
+        valuable: chip.valuable || false,
         values
       } as ChipBase;
     });
