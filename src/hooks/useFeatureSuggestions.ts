@@ -20,8 +20,6 @@ const getFeatureSuggestions = async (): Promise<FeatureSuggestion[]> => {
       .from('upcoming_features')
       .select('*')
       .order('votes', { ascending: false });
-    
-    console.log(data);
       
     if (error) {
       console.error('Error fetching feature suggestions:', error);

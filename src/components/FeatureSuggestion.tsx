@@ -134,9 +134,11 @@ const FeatureSuggestion = () => {
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                   <CardTitle className="text-lg">{suggestion.title}</CardTitle>
-                  <Badge className={getStatusColor(suggestion.status)}>
-                    {suggestion.status ? suggestion.status.toString().replace("-", " ") : "considering"}
-                  </Badge>
+                  <div>
+                    <Badge variant="outline" className={getStatusColor(suggestion.status)}>
+                      {suggestion.status ? suggestion.status.toString().replace("-", " ") : "considering"}
+                    </Badge>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pb-2">

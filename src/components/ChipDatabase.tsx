@@ -1070,9 +1070,11 @@ const ChipDatabase = () => {
                         {chip.affectedTurrets.map(turret => (
                           <Popover key={turret}>
                             <PopoverTrigger asChild>
-                              <Badge className={`${getTurretTypeColor(turret)} cursor-pointer`}>
-                                {getTurretNickname(turret as TurretName)}
-                              </Badge>
+                              <div className="inline-block">
+                                <Badge className={`${getTurretTypeColor(turret)} cursor-pointer`}>
+                                  {getTurretNickname(turret as TurretName)}
+                                </Badge>
+                              </div>
                             </PopoverTrigger>
                             <PopoverContent className="p-2">
                               <p>{turret}</p>
