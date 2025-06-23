@@ -20,10 +20,6 @@ const Navigation = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-6">
               <Link to="/" className="flex items-center space-x-2 text-xl font-bold text-primary">
-                <svg className="h-6 w-6" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="256" cy="256" r="70" fill="currentColor" opacity="0.8"/>
-                  <circle cx="256" cy="256" r="100" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="10 5" opacity="0.8"/>
-                </svg>
                 <span>Galaxy Defense</span>
               </Link>
               
