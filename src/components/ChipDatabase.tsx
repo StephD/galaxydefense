@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useChipsData, useGearTypes, ChipBase, GearType, ChipRarity, addChip, updateChip } from "@/hooks/useChipsData";
 import { type TurretType, type TurretName, type TurretNickname, useTurretNames, useTurretTypes, TurretTypeNames } from "@/hooks/useCardsData";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { InfoIcon, PlusCircle, X, Check, ChevronDown, ChevronUp, Edit, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -1012,17 +1013,17 @@ const ChipDatabase = () => {
                   <TableRow key={chip.id}>
                     <TableCell className="font-medium whitespace-nowrap w-auto min-w-[120px] max-w-[250px]">
                       <div className="flex items-center gap-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger className="flex items-center gap-1">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="ghost" className="flex items-center gap-1 p-0 h-auto">
                               {chip.name}
                               <InfoIcon className="h-4 w-4 text-muted-foreground" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="">{chip.description}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-80 p-3 ml-4">
+                            <p className="text-sm">{chip.description}</p>
+                          </PopoverContent>
+                        </Popover>
                         {user && (
                           <Button 
                             variant="ghost" 
@@ -1067,18 +1068,16 @@ const ChipDatabase = () => {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {chip.affectedTurrets.map(turret => (
-                          <TooltipProvider key={turret}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Badge className={getTurretTypeColor(turret)}>
-                                  {getTurretNickname(turret as TurretName)}
-                                </Badge>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{turret}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Popover key={turret}>
+                            <PopoverTrigger asChild>
+                              <Badge className={`${getTurretTypeColor(turret)} cursor-pointer`}>
+                                {getTurretNickname(turret as TurretName)}
+                              </Badge>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-2">
+                              <p>{turret}</p>
+                            </PopoverContent>
+                          </Popover>
                         ))}
                       </div>
                     </TableCell>
