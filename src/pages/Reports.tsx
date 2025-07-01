@@ -4,18 +4,28 @@ import ReportForm from "@/components/ReportForm";
 import ReportTable from "@/components/ReportTable";
 import ReportViewModal from "@/components/ReportViewModal";
 import { Report } from "@/hooks/useReports";
-import { useAllReports, useCreateReport } from "@/hooks/useReports";
+import { useAllReports, useCreateReport, useVoteUpReport } from "@/hooks/useReports";
 import { toast } from "@/components/ui/use-toast";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Navigation from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Reports = () => {
   const { user, isAuthenticated, isAdmin } = useAuth();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
   // Use React Query hook for fetching reports
   const { 
@@ -27,6 +37,7 @@ const Reports = () => {
   
   // Create report mutation
   const { mutateAsync: createReportMutation } = useCreateReport();
+  const { mutateAsync: voteUpReportMutation } = useVoteUpReport();
   
   // Call fetchReports when admin status changes
   useEffect(() => {
@@ -64,7 +75,8 @@ const Reports = () => {
         title: formData.title.trim(),
         description: formData.description.trim(),
         type: formData.type,
-        user_id: formData.user_id.trim()
+        user_id: formData.user_id.trim(),
+        mod_id: formData.mod_id
       };
 
       // Use the mutation function instead of direct service call
@@ -72,13 +84,17 @@ const Reports = () => {
         title: sanitizedData.title,
         description: sanitizedData.description,
         type: sanitizedData.type,
-        user_id: sanitizedData.user_id
+        user_id: sanitizedData.user_id,
+        mod_id: sanitizedData.mod_id
       });
 
       toast({
         title: "Success",
         description: "Report created successfully",
       });
+      
+      // Close the create modal after successful submission
+      setIsCreateModalOpen(false);
       
       // Reports list will be automatically refreshed by React Query
     } catch (error) {
@@ -87,6 +103,34 @@ const Reports = () => {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create report. Please try again later.",
         variant: "destructive",
+      });
+    }
+  };
+
+  // Error handling for report creation
+  const handleCreateError = (error: Error) => {
+    console.error("Error creating report:", error);
+    toast({
+      variant: "destructive",
+      title: "Error creating report",
+      description: error.message || "An unexpected error occurred",
+    });
+  };
+  
+  // Handle vote up for a report
+  const handleVoteUp = async (reportId: string) => {
+    try {
+      await voteUpReportMutation(reportId);
+      toast({
+        title: "Success",
+        description: "Vote recorded successfully",
+      });
+    } catch (error) {
+      console.error("Error voting up report:", error);
+      toast({
+        variant: "destructive",
+        title: "Error voting up report",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
       });
     }
   };
@@ -117,7 +161,7 @@ const Reports = () => {
     return (
       <>
         <Navigation />
-        <div className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-6">
           <Card>
             <CardContent className="pt-6 pb-6">
               <div className="flex flex-col items-center justify-center py-12">
@@ -127,7 +171,7 @@ const Reports = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </main>
       </>
     );
   }
@@ -155,12 +199,12 @@ const Reports = () => {
   // Display error state if there's an error
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6">
         <Navigation />
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Reports</h1>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -168,14 +212,17 @@ const Reports = () => {
   return (
     <>
       <Navigation />
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Reports</h1>
-        
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Create New Report</h2>
-          <ReportForm onSubmit={handleCreateReport} />
+      <main className="container mx-auto px-4 py-6">
+        <div className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Reports
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Explore all available reports.
+          </p>
         </div>
-        
+        <hr />
+          
         <div>
           <h2 className="text-xl font-semibold mb-4">Reports List</h2>
           {isLoading ? (
@@ -194,16 +241,28 @@ const Reports = () => {
                 </div>
               </CardContent>
             </Card>
-          ) : (
+          ) : reports.length > 0 ? (
             <ReportTable 
               reports={reports} 
-              isLoading={isLoading} 
-              onViewReport={handleViewReport} 
+              isLoading={isLoading}
+              onViewReport={(report) => {
+                setSelectedReport(report);
+                setIsViewModalOpen(true);
+              }}
+              onCreateReport={() => setIsCreateModalOpen(true)}
+              onVoteUp={handleVoteUp}
             />
+          ) : (
+            <Card>
+              <CardContent className="p-6 text-center">
+                <p className="text-muted-foreground">No reports found.</p>
+              </CardContent>
+            </Card>
           )}
         </div>
-      </div>
+      </main>
 
+      {/* View Report Modal */}
       {selectedReport && (
         <ReportViewModal
           report={selectedReport}
@@ -211,6 +270,19 @@ const Reports = () => {
           onOpenChange={setIsViewModalOpen}
         />
       )}
+      
+      {/* Create Report Modal */}
+      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+        <DialogContent className="sm:max-w-[550px]">
+          <DialogHeader>
+            <DialogTitle>Create New Report</DialogTitle>
+            <DialogDescription>
+              Fill out the form below to submit a new report.
+            </DialogDescription>
+          </DialogHeader>
+          <ReportForm onSubmit={handleCreateReport} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

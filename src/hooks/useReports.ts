@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
 export type ReportType = 'suggestions' | 'translation' | 'optimisation' | 'other';
+export type ModName = 'Steph' | 'Goat' | 'Reaper' | 'Kj' | 'SnowMiku' | 'Other';
 
 export interface Report {
   id: string;
@@ -9,8 +10,10 @@ export interface Report {
   description: string;
   type: ReportType;
   user_id: string;
+  mod_id?: string; // Name of the mod who reported it
   created_at: string;
-  updated_at: string;
+  created_at: string;
+  votes?: number; // Optional for backward compatibility
 }
 
 // Get all reports (admin only)
@@ -25,6 +28,8 @@ const getAllReports = async (): Promise<Report[]> => {
       console.error('Error fetching all reports:', error);
       throw error;
     }
+
+    console.log('All reports:', data);
     
     return data || [];
   } catch (error) {
@@ -85,26 +90,32 @@ const createReport = async (report: {
   description: string;
   type: ReportType;
   user_id: string;
+  mod_id?: string;
 }): Promise<Report> => {
-  const { title, description, type, user_id } = report;
+  const { title, description, type, user_id, mod_id } = report;
   
-  // Validate required fields
   if (!title || !description || !type || !user_id) {
-    throw new Error('All fields are required');
+    throw new Error('Missing required fields for report creation');
   }
-
-  // Create report object with all required fields
-  const newReport: Omit<Report, 'id' | 'created_at'> = {
-    title,
-    description,
-    type,
-    user_id,
-    updated_at: new Date().toISOString()
+  
+  // Add timestamps
+  const now = new Date().toISOString();
+  
+  // Create report with all fields including timestamps
+  const reportData = {
+    title: title,
+    description: description,
+    type: type,
+    user_id: user_id,
+    mod_id: mod_id,
+    votes: 0, // Initialize votes to 0
+    created_at: now,
+    created_at: now
   };
 
   const { data, error } = await supabase
     .from('reports')
-    .insert([newReport])
+    .insert([reportData])
     .select()
     .single();
     
@@ -129,10 +140,10 @@ const updateReport = async (
     throw new Error('Report ID is required');
   }
   
-  // Add updated_at timestamp
+  // Add created_at timestamp
   const updatedData = {
     ...updates,
-    updated_at: new Date().toISOString()
+    created_at: new Date().toISOString()
   };
   
   const { data, error } = await supabase
@@ -236,6 +247,65 @@ export const useDeleteReport = () => {
   
   return useMutation({
     mutationFn: deleteReport,
+    onSuccess: () => {
+      // Invalidate relevant queries to trigger refetch
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+    }
+  });
+};
+
+// Vote up a report
+const voteUpReport = async (reportId: string): Promise<Report> => {
+  if (!reportId) {
+    throw new Error('Report ID is required');
+  }
+  
+  // First get the current report to get the current vote count
+  const { data: currentReport, error: fetchError } = await supabase
+    .from('reports')
+    .select('votes')
+    .eq('id', reportId)
+    .single();
+    
+  if (fetchError) {
+    console.error(`Error fetching report ${reportId}:`, fetchError);
+    throw new Error(`Failed to fetch report: ${fetchError.message}`);
+  }
+  
+  if (!currentReport) {
+    throw new Error(`Report with ID ${reportId} not found`);
+  }
+  
+  // Increment the vote count
+  const currentVotes = currentReport.votes || 0;
+  const newVotes = currentVotes + 1;
+  
+  // Update the report with the new vote count
+  const { data, error } = await supabase
+    .from('reports')
+    .update({ votes: newVotes, created_at: new Date().toISOString() })
+    .eq('id', reportId)
+    .select()
+    .single();
+    
+  if (error) {
+    console.error(`Error voting up report ${reportId}:`, error);
+    throw new Error(`Failed to vote up report: ${error.message}`);
+  }
+  
+  if (!data) {
+    throw new Error(`Report with ID ${reportId} not found or could not be updated`);
+  }
+  
+  return data;
+};
+
+// Hook to vote up a report
+export const useVoteUpReport = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: voteUpReport,
     onSuccess: () => {
       // Invalidate relevant queries to trigger refetch
       queryClient.invalidateQueries({ queryKey: ["reports"] });

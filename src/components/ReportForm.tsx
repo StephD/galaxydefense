@@ -2,11 +2,26 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReportType, Report } from "@/hooks/useReports";
+import { ReportType, Report, ModName } from "@/hooks/useReports";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -17,14 +32,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
 
 // Form schema validation with sanitization
 const formSchema = z.object({
@@ -39,11 +46,21 @@ const formSchema = z.object({
   user_id: z.string()
     .min(1, "User ID is required")
     .regex(/^[a-zA-Z0-9-_]+$/, "User ID must contain only alphanumeric characters, hyphens, and underscores"), // Validate format
+  mod_id: z.enum(["Steph", "Goat", "Reaper", "Kj", "SnowMiku", "Other"] as const),
   type: z.enum(["suggestions", "translation", "optimisation", "other"] as const),
 });
 
 // Define the form values type based on the schema
 type FormValues = z.infer<typeof formSchema>;
+
+// Explicitly define the type to ensure it matches the schema
+interface FormData {
+  title: string;
+  description: string;
+  user_id: string;
+  mod_id: ModName;
+  type: ReportType;
+}
 
 interface ReportFormProps {
   onSubmit: (data: FormValues) => Promise<void>;
@@ -59,6 +76,7 @@ const ReportForm = ({ onSubmit }: ReportFormProps) => {
       title: "",
       description: "",
       user_id: "",
+      mod_id: "Other",
       type: "suggestions",
     },
     mode: "onBlur", // Validate on blur for better UX
@@ -165,19 +183,50 @@ const ReportForm = ({ onSubmit }: ReportFormProps) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="user_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="User ID who reported this issue" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="user_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User ID</FormLabel>
+                    <FormControl>
+                      <Input placeholder="User ID who reported this issue" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="mod_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mod Name</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select mod name" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Steph">Steph</SelectItem>
+                        <SelectItem value="Goat">Goat</SelectItem>
+                        <SelectItem value="Reaper">Reaper</SelectItem>
+                        <SelectItem value="Kj">Kj</SelectItem>
+                        <SelectItem value="SnowMiku">SnowMiku</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Creating..." : "Create Report"}
