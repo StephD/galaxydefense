@@ -71,9 +71,10 @@ interface ReportFormProps {
     mod_id?: ModName;
     type?: ReportType;
   };
+  isEditing?: boolean;
 }
 
-const ReportForm = ({ onSubmit, defaultValues }: ReportFormProps) => {
+const ReportForm = ({ onSubmit, defaultValues, isEditing = false }: ReportFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -236,7 +237,10 @@ const ReportForm = ({ onSubmit, defaultValues }: ReportFormProps) => {
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create Report"}
+              {isSubmitting 
+                ? (isEditing ? "Updating..." : "Creating...") 
+                : (isEditing ? "Update Report" : "Create Report")
+              }
             </Button>
           </form>
         </Form>

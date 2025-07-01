@@ -337,6 +337,7 @@ const Reports = () => {
                 user_id: reportToEdit.user_id,
                 mod_id: (reportToEdit.mod_id as ModName) || "Other" as ModName
               }}
+              isEditing={true}
             />
           </DialogContent>
         </Dialog>

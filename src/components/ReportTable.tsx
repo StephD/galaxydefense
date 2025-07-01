@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Report, ReportType } from "@/hooks/useReports";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Pencil, ThumbsUp, Filter, Plus } from "lucide-react";
+import { Eye, Pencil, ThumbsUp, Filter, Plus, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -41,6 +42,17 @@ const ReportTable = ({
   onVoteUp,
 }: ReportTableProps) => {
   const [selectedType, setSelectedType] = useState<string>("all");
+  const [searchTitle, setSearchTitle] = useState<string>("");
+  const [debouncedSearchTitle, setDebouncedSearchTitle] = useState<string>("");
+  
+  // Debounce search input to avoid excessive filtering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTitle(searchTitle);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchTitle]);
   
   // Function to truncate text if it's too long
   const truncateText = (text: string, maxLength: number = 50) => {
@@ -66,10 +78,17 @@ const ReportTable = ({
   
   // Filter and sort reports
   const filteredAndSortedReports = useMemo(() => {
-    // First filter by type if needed
-    const filtered = selectedType === "all" 
-      ? reports 
-      : reports.filter(report => report.type === selectedType);
+    // First filter by type and title
+    const filtered = reports.filter(report => {
+      // Filter by type if not 'all'
+      const typeMatch = selectedType === "all" || report.type === selectedType;
+      
+      // Filter by title if search text exists
+      const titleMatch = !debouncedSearchTitle || 
+        report.title.toLowerCase().includes(debouncedSearchTitle.toLowerCase());
+      
+      return typeMatch && titleMatch;
+    });
       
     // Then sort by votes (descending)
     return [...filtered].sort((a, b) => {
@@ -78,7 +97,7 @@ const ReportTable = ({
       const votesB = b.votes || 0;
       return votesB - votesA;
     });
-  }, [reports, selectedType]);
+  }, [reports, selectedType, debouncedSearchTitle]);
 
   if (isLoading) {
     return (
@@ -116,7 +135,7 @@ const ReportTable = ({
     <div className="space-y-4">
       {/* Filter UI */}
       <div className="flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {onCreateReport && (
             <Button 
               onClick={onCreateReport} 
@@ -138,6 +157,7 @@ const ReportTable = ({
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
+                <SelectLabel>Report Types</SelectLabel>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="suggestions">Suggestions</SelectItem>
                 <SelectItem value="translation">Translation</SelectItem>
@@ -146,6 +166,31 @@ const ReportTable = ({
               </SelectGroup>
             </SelectContent>
           </Select>
+          
+          <div className="flex items-center gap-2 ml-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">Search by title:</span>
+          </div>
+          <div className="relative w-[220px]">
+            <Input
+              type="text"
+              placeholder="Search report titles..."
+              value={searchTitle}
+              onChange={(e) => setSearchTitle(e.target.value)}
+              className="h-8 text-sm pl-2 pr-8"
+            />
+            {searchTitle && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-8 w-8 p-0"
+                onClick={() => setSearchTitle("")}
+                title="Clear search"
+              >
+                ×
+              </Button>
+            )}
+          </div>
         </div>
       </div>
       
