@@ -12,7 +12,6 @@ export interface Report {
   user_id: string;
   mod_id?: string; // Name of the mod who reported it
   created_at: string;
-  created_at: string;
   votes?: number; // Optional for backward compatibility
 }
 
@@ -28,8 +27,6 @@ const getAllReports = async (): Promise<Report[]> => {
       console.error('Error fetching all reports:', error);
       throw error;
     }
-
-    console.log('All reports:', data);
     
     return data || [];
   } catch (error) {
@@ -109,7 +106,6 @@ const createReport = async (report: {
     user_id: user_id,
     mod_id: mod_id,
     votes: 0, // Initialize votes to 0
-    created_at: now,
     created_at: now
   };
 

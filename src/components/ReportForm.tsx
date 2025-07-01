@@ -64,15 +64,22 @@ interface FormData {
 
 interface ReportFormProps {
   onSubmit: (data: FormValues) => Promise<void>;
+  defaultValues?: {
+    title?: string;
+    description?: string;
+    user_id?: string;
+    mod_id?: ModName;
+    type?: ReportType;
+  };
 }
 
-const ReportForm = ({ onSubmit }: ReportFormProps) => {
+const ReportForm = ({ onSubmit, defaultValues }: ReportFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       title: "",
       description: "",
       user_id: "",

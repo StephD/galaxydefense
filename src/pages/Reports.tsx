@@ -3,8 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import ReportForm from "@/components/ReportForm";
 import ReportTable from "@/components/ReportTable";
 import ReportViewModal from "@/components/ReportViewModal";
-import { Report } from "@/hooks/useReports";
-import { useAllReports, useCreateReport, useVoteUpReport } from "@/hooks/useReports";
+import { Report, ModName } from "@/hooks/useReports";
+import { useAllReports, useCreateReport, useVoteUpReport, useUpdateReport } from "@/hooks/useReports";
 import { toast } from "@/components/ui/use-toast";
 import { AlertCircle, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -26,6 +26,8 @@ const Reports = () => {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [reportToEdit, setReportToEdit] = useState<Report | null>(null);
   
   // Use React Query hook for fetching reports
   const { 
@@ -35,9 +37,10 @@ const Reports = () => {
     refetch: fetchReports 
   } = useAllReports();
   
-  // Create report mutation
+  // Report mutations
   const { mutateAsync: createReportMutation } = useCreateReport();
   const { mutateAsync: voteUpReportMutation } = useVoteUpReport();
+  const { mutateAsync: updateReportMutation } = useUpdateReport();
   
   // Call fetchReports when admin status changes
   useEffect(() => {
@@ -122,15 +125,59 @@ const Reports = () => {
     try {
       await voteUpReportMutation(reportId);
       toast({
-        title: "Success",
-        description: "Vote recorded successfully",
+        title: "Vote Recorded",
+        description: "Your vote has been counted.",
       });
     } catch (error) {
       console.error("Error voting up report:", error);
       toast({
         variant: "destructive",
-        title: "Error voting up report",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        title: "Error",
+        description: "Failed to record your vote. Please try again.",
+      });
+    }
+  };
+
+  // Handle report update
+  const handleUpdateReport = async (formData: any) => {
+    if (!reportToEdit) return;
+    
+    try {
+      // Sanitize and validate data
+      const sanitizedData = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        type: formData.type,
+        user_id: formData.user_id.trim(),
+        mod_id: formData.mod_id
+      };
+
+      // Use the mutation function
+      await updateReportMutation({
+        reportId: reportToEdit.id,
+        updates: {
+          title: sanitizedData.title,
+          description: sanitizedData.description,
+          type: sanitizedData.type,
+          user_id: sanitizedData.user_id,
+          mod_id: sanitizedData.mod_id
+        }
+      });
+
+      toast({
+        title: "Report Updated",
+        description: "The report has been successfully updated.",
+      });
+
+      // Close the modal after successful update
+      setIsEditModalOpen(false);
+      setReportToEdit(null);
+    } catch (error) {
+      console.error("Error updating report:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update report. Please try again.",
       });
     }
   };
@@ -155,26 +202,6 @@ const Reports = () => {
       document.title = "Galaxy Defense";
     };
   }, [isAuthenticated, isAdmin]);
-
-  // If not authenticated, show login required message
-  if (!isAuthenticated) {
-    return (
-      <>
-        <Navigation />
-        <main className="container mx-auto px-4 py-6">
-          <Card>
-            <CardContent className="pt-6 pb-6">
-              <div className="flex flex-col items-center justify-center py-12">
-                <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-                <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-                <p className="text-muted-foreground">Please log in to access this page.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </main>
-      </>
-    );
-  }
 
   // // If authenticated but not admin, show permission denied message
   // if (isAuthenticated && !isAdmin) {
@@ -218,7 +245,7 @@ const Reports = () => {
             Reports
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore all available reports.
+            Community reports, suggestions and optimisations.
           </p>
         </div>
         <hr />
@@ -251,6 +278,10 @@ const Reports = () => {
               }}
               onCreateReport={() => setIsCreateModalOpen(true)}
               onVoteUp={handleVoteUp}
+              onEditReport={(report) => {
+                setReportToEdit(report);
+                setIsEditModalOpen(true);
+              }}
             />
           ) : (
             <Card>
@@ -283,6 +314,33 @@ const Reports = () => {
           <ReportForm onSubmit={handleCreateReport} />
         </DialogContent>
       </Dialog>
+
+      {/* Edit Report Modal */}
+      {reportToEdit && (
+        <Dialog open={isEditModalOpen} onOpenChange={(open) => {
+          setIsEditModalOpen(open);
+          if (!open) setReportToEdit(null);
+        }}>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle>Edit Report</DialogTitle>
+              <DialogDescription>
+                Update the report details below.
+              </DialogDescription>
+            </DialogHeader>
+            <ReportForm 
+              onSubmit={handleUpdateReport} 
+              defaultValues={{
+                title: reportToEdit.title,
+                description: reportToEdit.description,
+                type: reportToEdit.type,
+                user_id: reportToEdit.user_id,
+                mod_id: (reportToEdit.mod_id as ModName) || "Other" as ModName
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };
