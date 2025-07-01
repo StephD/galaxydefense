@@ -134,14 +134,12 @@ const Navigation = () => {
         </div>
         
         {/* Mobile Menu */}
-        <div 
-          id="mobile-menu"
-          className={cn(
-            "fixed inset-0 top-16 z-50 bg-white dark:bg-background border-t border-border md:hidden transition-transform duration-300 ease-in-out",
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          )}
-        >
-          <div className="container mx-auto px-4 py-6 flex flex-col space-y-6">
+        {isMobileMenuOpen && (
+          <div 
+            id="mobile-menu"
+            className="fixed inset-0 top-16 z-50 md:hidden bg-white/95 dark:bg-gray-900/95 border-t shadow-lg "
+          >
+            <div className="container mx-auto px-4 py-6 flex flex-col space-y-6 relative z-10 bg-background border-b shadow-sm">
             <div className="flex flex-col space-y-4">
               <Link 
                 to="/cards" 
@@ -202,6 +200,7 @@ const Navigation = () => {
             </div>
           </div>
         </div>
+        )}
       </nav>
       
       <LoginModal 
