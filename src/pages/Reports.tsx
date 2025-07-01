@@ -311,7 +311,10 @@ const Reports = () => {
               Fill out the form below to submit a new report.
             </DialogDescription>
           </DialogHeader>
-          <ReportForm onSubmit={handleCreateReport} />
+          <ReportForm 
+            onSubmit={handleCreateReport} 
+            onCancel={() => setIsCreateModalOpen(false)} 
+          />
         </DialogContent>
       </Dialog>
 
@@ -330,6 +333,7 @@ const Reports = () => {
             </DialogHeader>
             <ReportForm 
               onSubmit={handleUpdateReport} 
+              onCancel={() => setIsEditModalOpen(false)}
               defaultValues={{
                 title: reportToEdit.title,
                 description: reportToEdit.description,

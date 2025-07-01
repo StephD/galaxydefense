@@ -64,6 +64,7 @@ interface FormData {
 
 interface ReportFormProps {
   onSubmit: (data: FormValues) => Promise<void>;
+  onCancel?: () => void;
   defaultValues?: {
     title?: string;
     description?: string;
@@ -74,7 +75,7 @@ interface ReportFormProps {
   isEditing?: boolean;
 }
 
-const ReportForm = ({ onSubmit, defaultValues, isEditing = false }: ReportFormProps) => {
+const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: ReportFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -236,12 +237,29 @@ const ReportForm = ({ onSubmit, defaultValues, isEditing = false }: ReportFormPr
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting 
-                ? (isEditing ? "Updating..." : "Creating...") 
-                : (isEditing ? "Update Report" : "Create Report")
-              }
-            </Button>
+            <div className="flex gap-4 w-full">
+              {onCancel && (
+                <Button 
+                  type="button" 
+                  variant="secondary" 
+                  className="flex-1" 
+                  onClick={onCancel}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button 
+                type="submit" 
+                className="flex-1" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting 
+                  ? (isEditing ? "Updating..." : "Creating...") 
+                  : (isEditing ? "Update Report" : "Create Report")
+                }
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
