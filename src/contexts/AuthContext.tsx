@@ -8,6 +8,7 @@ import {
   signOut, 
   onAuthStateChange 
 } from '@/lib/authService';
+import { supabase } from '@/lib/supabase';
 
 // Define the shape of our auth context
 interface AuthContextType {
@@ -15,6 +16,8 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
+  checkAdminStatus: () => Promise<boolean>;
   login: (email: string, password: string) => Promise<{ success: boolean; error: string | null }>;
   signup: (email: string, password: string) => Promise<{ success: boolean; error: string | null }>;
   logout: () => Promise<{ success: boolean; error: string | null }>;
@@ -26,6 +29,8 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   isLoading: true,
   isAuthenticated: false,
+  isAdmin: false,
+  checkAdminStatus: async () => false,
   login: async () => ({ success: false, error: 'AuthContext not initialized' }),
   signup: async () => ({ success: false, error: 'AuthContext not initialized' }),
   logout: async () => ({ success: false, error: 'AuthContext not initialized' }),
@@ -39,6 +44,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if the current user is an admin
+  const checkAdminStatus = async (): Promise<boolean> => {
+    if (!user?.id) return false;
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('is_admin')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (error) {
+        console.error('Error checking admin status:', error);
+        setIsAdmin(false);
+        return false;
+      }
+      
+      const adminStatus = data?.is_admin || false;
+      setIsAdmin(adminStatus);
+      return adminStatus;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      setIsAdmin(false);
+      return false;
+    }
+  };
 
   // Initialize auth state
   useEffect(() => {
@@ -52,6 +85,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (currentSession) {
           const { user: currentUser } = await getCurrentUser();
           setUser(currentUser);
+          
+          // Check admin status if we have a user
+          if (currentUser?.id) {
+            await checkAdminStatus();
+          }
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -69,8 +107,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (session) {
         const { user: currentUser } = await getCurrentUser();
         setUser(currentUser);
+        
+        // Check admin status when auth state changes
+        if (currentUser?.id) {
+          await checkAdminStatus();
+        }
       } else {
         setUser(null);
+        setIsAdmin(false);
       }
       
       setIsLoading(false);
@@ -154,12 +198,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     session,
     isLoading,
     isAuthenticated: !!user,
+    isAdmin,
+    checkAdminStatus,
     login,
     signup,
     logout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContext;
