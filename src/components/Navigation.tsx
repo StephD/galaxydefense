@@ -139,8 +139,8 @@ const Navigation = () => {
             id="mobile-menu"
             className="fixed inset-0 top-16 z-50 md:hidden bg-white/95 dark:bg-gray-900/95 border-t shadow-lg "
           >
-            <div className="container mx-auto px-4 py-6 flex flex-col space-y-6 relative z-10 bg-background border-b shadow-sm">
-            <div className="flex flex-col space-y-4">
+            <div className="container pt-2 mx-auto px-4 py-6 flex flex-col space-y-6 relative z-10 bg-background border-b shadow-sm">
+            <div className="flex flex-col ">
               <Link 
                 to="/cards" 
                 className="flex items-center space-x-3 p-3 rounded-md hover:bg-secondary transition-colors duration-200"
@@ -166,7 +166,6 @@ const Navigation = () => {
                   <FileText className="h-5 w-5" />
                   <span className="text-lg">Reports</span>
                 </Link>
-              
             </div>
             
             <div className="pt-4 border-t border-border">
