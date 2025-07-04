@@ -923,7 +923,7 @@ const ChipDatabase = () => {
                   <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px] hidden md:table-cell">Boost Type</TableHead>
                   {rarities.map(rarity => (
                     visibleColumns[rarity] && (
-                      <TableHead key={rarity} className="whitespace-nowrap text-center w-[80px] min-w-[80px] max-w-[80px]">
+                      <TableHead key={rarity} className="whitespace-nowrap text-center w-[60px] min-w-[60px] max-w-[60px] px-2">
                         <Badge className={getRarityColor(rarity)}>
                         {rarity.substring(0, 4)}
                         </Badge>
@@ -1026,7 +1026,7 @@ const ChipDatabase = () => {
                     
                     {rarities.map(rarity => (
                       visibleColumns[rarity] && (
-                        <TableCell key={rarity} className="text-center w-[80px] min-w-[80px] max-w-[80px]">
+                        <TableCell key={rarity} className="text-center w-[60px] min-w-[60px] max-w-[60px] px-2">
                           <div className="flex justify-center items-center">
                             {chip.values[rarity] !== undefined ? (
                               <span className={cn(
