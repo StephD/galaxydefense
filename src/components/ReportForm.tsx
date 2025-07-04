@@ -121,8 +121,9 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
   };
 
   return (
-    <Card>
-      <CardContent className="pt-6">
+    <Card className="border-0 border-b shadow-none">
+      <hr className="mb-2" />
+      <CardContent className="p-0">
         {formError && (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
@@ -130,18 +131,20 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
           </Alert>
         )}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Report title" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="flex flex-row items-center gap-2">
+                    <FormLabel className="min-w-20">Title</FormLabel>
+                    <div className="flex w-full" style={{ marginTop: "0px" }}>
+                      <FormControl>
+                        <Input placeholder="Report title" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -150,25 +153,27 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
                 control={form.control}
                 name="type"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Report Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select report type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="suggestions">Suggestions</SelectItem>
-                        <SelectItem value="translation">Translation</SelectItem>
-                        <SelectItem value="optimisation">Optimisation</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
+                  <FormItem className="flex flex-row items-center gap-2">
+                    <FormLabel className="min-w-20">Report Type</FormLabel>
+                    <div className="flex-1" style={{ marginTop: "0px" }}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select report type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="suggestions">Suggestions</SelectItem>
+                          <SelectItem value="translation">Translation</SelectItem>
+                          <SelectItem value="optimisation">Optimisation</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -179,11 +184,11 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel className="mb-1">Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Detailed description of the report"
-                      className="min-h-[120px]"
+                      className="min-h-[100px]"
                       {...field}
                     />
                   </FormControl>
@@ -192,17 +197,19 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
               )}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name="user_id"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>User ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="User ID who reported this issue" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="flex flex-row items-center gap-2">
+                    <FormLabel className="min-w-20">User ID</FormLabel>
+                    <div className="flex-1" style={{ marginTop: "0px" }}>
+                      <FormControl>
+                        <Input placeholder="User ID who reported this issue" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -211,35 +218,38 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
                 control={form.control}
                 name="mod_id"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mod Name</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select mod name" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Steph">Steph</SelectItem>
-                        <SelectItem value="Goat">Goat</SelectItem>
-                        <SelectItem value="Reaper">Reaper</SelectItem>
-                        <SelectItem value="Kj">Kj</SelectItem>
-                        <SelectItem value="SnowMiku">SnowMiku</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
+                  <FormItem className="flex flex-row items-center gap-2">
+                    <FormLabel className="min-w-20">Mod Name</FormLabel>
+                    <div className="flex-1" style={{ marginTop: "0px" }}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select mod name" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Steph">Steph</SelectItem>
+                          <SelectItem value="Goat">Goat</SelectItem>
+                          <SelectItem value="Reaper">Reaper</SelectItem>
+                          <SelectItem value="Kj">Kj</SelectItem>
+                          <SelectItem value="SnowMiku">SnowMiku</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className="flex gap-4 w-full">
+            <div className="flex gap-4 w-full pt-2 pb-0">
               {onCancel && (
                 <Button 
+                  size="sm"
                   type="button" 
                   variant="secondary" 
                   className="flex-1" 
@@ -250,6 +260,7 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
                 </Button>
               )}
               <Button 
+                size="sm"
                 type="submit" 
                 className="flex-1" 
                 disabled={isSubmitting}

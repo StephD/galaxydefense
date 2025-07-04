@@ -912,9 +912,6 @@ const ChipDatabase = () => {
 
       {/* Chips Table */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle>Chip Database</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
