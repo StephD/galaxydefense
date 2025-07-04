@@ -911,8 +911,8 @@ const ChipDatabase = () => {
       </div>
 
       {/* Chips Table */}
-      <Card>
-        <CardContent>
+      <Card className="p-0">
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -920,12 +920,12 @@ const ChipDatabase = () => {
                   <TableHead className="whitespace-nowrap w-auto min-w-[120px] max-w-[200px]">Name</TableHead>
                   <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px]">Gears</TableHead>
                   <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px]">Turrets</TableHead>
-                  <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px]">Boost Type</TableHead>
+                  <TableHead className="whitespace-nowrap w-[120px] min-w-[120px] max-w-[150px] hidden md:table-cell">Boost Type</TableHead>
                   {rarities.map(rarity => (
                     visibleColumns[rarity] && (
-                      <TableHead key={rarity} className="whitespace-nowrap text-center">
+                      <TableHead key={rarity} className="whitespace-nowrap text-center w-[80px] min-w-[80px] max-w-[80px]">
                         <Badge className={getRarityColor(rarity)}>
-                          {rarity}
+                        {rarity.substring(0, 4)}
                         </Badge>
                       </TableHead>
                     )
@@ -1022,11 +1022,11 @@ const ChipDatabase = () => {
                       </div>
                     </TableCell>
                     
-                    <TableCell className="whitespace-nowrap">{chip.boostType}</TableCell>
+                    <TableCell className="whitespace-nowrap hidden md:table-cell">{chip.boostType}</TableCell>
                     
                     {rarities.map(rarity => (
                       visibleColumns[rarity] && (
-                        <TableCell key={rarity} className="text-center">
+                        <TableCell key={rarity} className="text-center w-[80px] min-w-[80px] max-w-[80px]">
                           <div className="flex justify-center items-center">
                             {chip.values[rarity] !== undefined ? (
                               <span className={cn(
