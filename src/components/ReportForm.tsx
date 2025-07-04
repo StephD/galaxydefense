@@ -143,8 +143,8 @@ const ReportForm = ({ onSubmit, onCancel, defaultValues, isEditing = false }: Re
                       <FormControl>
                         <Input placeholder="Report title" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

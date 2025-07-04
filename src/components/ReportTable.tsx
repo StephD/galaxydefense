@@ -157,7 +157,7 @@ const ReportTable = ({
             <span className="text-sm font-medium">Type:</span>
           </div>
           <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger className="w-[180px] h-8 text-sm">
+            <SelectTrigger className="w-[160px] h-8 text-sm">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -176,7 +176,7 @@ const ReportTable = ({
             <Search className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium">Search:</span>
           </div>
-          <div className="relative w-[280px]">
+          <div className="relative w-[260px]">
             <Input
               type="text"
               placeholder="Search report titles..."
@@ -220,10 +220,10 @@ const ReportTable = ({
                   className="h-10 cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => onViewReport(report)}
                 >
-                  <TableCell className="py-1">{getReportTypeBadge(report.type)}</TableCell>
-                  <TableCell className="font-medium py-1">{report.title}</TableCell>
-                  <TableCell className="py-1 hidden md:table-cell">{truncateText(report.description, 40)}</TableCell>
-                  <TableCell className="py-1 hidden sm:table-cell">
+                  <TableCell className="py-1 px-2">{getReportTypeBadge(report.type)}</TableCell>
+                  <TableCell className="font-medium py-1 px-2">{report.title}</TableCell>
+                  <TableCell className="py-1 hidden md:table-cell px-2">{truncateText(report.description, 40)}</TableCell>
+                  <TableCell className="py-1 hidden sm:table-cell px-2">
                     {report.mod_id ? (
                       <span className="text-sm">{report.mod_id}</span>
                     ) : (
@@ -236,7 +236,7 @@ const ReportTable = ({
                     </div>
                   </TableCell>
                   <TableCell className="text-right py-1">
-                    <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex justify-end gap-0" onClick={(e) => e.stopPropagation()}>
                       {onVoteUp && (
                         <Button
                           variant="ghost"
