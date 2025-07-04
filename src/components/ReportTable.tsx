@@ -62,17 +62,22 @@ const ReportTable = ({
 
   // Function to get badge color based on report type
   const getReportTypeBadge = (type: string) => {
+    // Truncate type names to 4 characters
+    const getTruncatedName = (fullName: string): string => {
+      return fullName.substring(0, 4);
+    };
+    
     switch (type) {
       case "suggestions":
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Suggestions</Badge>;
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{getTruncatedName("Suggestions")}</Badge>;
       case "translation":
-        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Translation</Badge>;
+        return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">{getTruncatedName("Translation")}</Badge>;
       case "optimisation":
-        return <Badge variant="outline" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">Optimisation</Badge>;
+        return <Badge variant="outline" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">{getTruncatedName("Optimisation")}</Badge>;
       case "other":
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">Other</Badge>;
+        return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">{getTruncatedName("Other")}</Badge>;
       default:
-        return <Badge variant="outline">{type}</Badge>;
+        return <Badge variant="outline">{getTruncatedName(type)}</Badge>;
     }
   };
   
@@ -149,7 +154,7 @@ const ReportTable = ({
           
           <div className="flex items-center gap-2 ml-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Filter by type:</span>
+            <span className="text-sm font-medium">Type:</span>
           </div>
           <Select value={selectedType} onValueChange={setSelectedType}>
             <SelectTrigger className="w-[180px] h-8 text-sm">
@@ -169,9 +174,9 @@ const ReportTable = ({
           
           <div className="flex items-center gap-2 ml-2">
             <Search className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Search by title:</span>
+            <span className="text-sm font-medium">Search:</span>
           </div>
-          <div className="relative w-[220px]">
+          <div className="relative w-[280px]">
             <Input
               type="text"
               placeholder="Search report titles..."
@@ -202,19 +207,23 @@ const ReportTable = ({
               <TableRow className="h-10">
                 <TableHead className="py-1">Type</TableHead>
                 <TableHead className="py-1">Title</TableHead>
-                <TableHead className="py-1">Description</TableHead>
-                <TableHead className="py-1">Mod</TableHead>
+                <TableHead className="py-1 hidden md:table-cell">Description</TableHead>
+                <TableHead className="py-1 hidden sm:table-cell">Mod</TableHead>
                 <TableHead className="py-1">Votes</TableHead>
                 <TableHead className="text-right py-1">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAndSortedReports.map((report) => (
-                <TableRow key={report.id} className="h-10">
+                <TableRow 
+                  key={report.id} 
+                  className="h-10 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => onViewReport(report)}
+                >
                   <TableCell className="py-1">{getReportTypeBadge(report.type)}</TableCell>
                   <TableCell className="font-medium py-1">{report.title}</TableCell>
-                  <TableCell className="py-1">{truncateText(report.description, 40)}</TableCell>
-                  <TableCell className="py-1">
+                  <TableCell className="py-1 hidden md:table-cell">{truncateText(report.description, 40)}</TableCell>
+                  <TableCell className="py-1 hidden sm:table-cell">
                     {report.mod_id ? (
                       <span className="text-sm">{report.mod_id}</span>
                     ) : (
@@ -227,33 +236,30 @@ const ReportTable = ({
                     </div>
                   </TableCell>
                   <TableCell className="text-right py-1">
-                    <div className="flex justify-end gap-1">
+                    <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                       {onVoteUp && (
                         <Button
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 p-0"
-                          onClick={() => onVoteUp(report.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onVoteUp(report.id);
+                          }}
                           title="Vote up"
                         >
                           <ThumbsUp className="h-3.5 w-3.5" />
                         </Button>
                       )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 w-7 p-0"
-                        onClick={() => onViewReport(report)}
-                        title="View report details"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                      </Button>
                       {onEditReport && (
                         <Button
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 p-0"
-                          onClick={() => onEditReport(report)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditReport(report);
+                          }}
                           title="Edit report"
                         >
                           <Pencil className="h-3.5 w-3.5" />

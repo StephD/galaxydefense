@@ -248,10 +248,9 @@ const Reports = () => {
             Community reports, suggestions and optimisations.
           </p>
         </div>
-        <hr />
+        <hr className="my-2"/>
           
         <div>
-          <h2 className="text-xl font-semibold mb-4">Reports List</h2>
           {isLoading ? (
             <Card>
               <CardContent className="p-6">

@@ -43,9 +43,9 @@ const formSchema = z.object({
     .min(10, "Description must be at least 10 characters")
     .max(1000, "Description must be less than 1000 characters")
     .transform(val => val.trim()), // Sanitize by trimming whitespace
-  user_id: z.string()
-    .min(1, "User ID is required")
-    .regex(/^[a-zA-Z0-9-_]+$/, "User ID must contain only alphanumeric characters, hyphens, and underscores"), // Validate format
+  user_id: z.string(),
+    // .min(1, "User ID is required")
+    // .regex(/^[a-zA-Z0-9-_]+$/, "User ID must contain only alphanumeric characters, hyphens, and underscores"), // Validate format
   mod_id: z.enum(["Steph", "Goat", "Reaper", "Kj", "SnowMiku", "Other"] as const),
   type: z.enum(["suggestions", "translation", "optimisation", "other"] as const),
 });

@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
 interface ReportViewModalProps {
@@ -42,28 +43,44 @@ const ReportViewModal = ({ report, isOpen, onOpenChange }: ReportViewModalProps)
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+    <Dialog open={isOpen} onOpenChange={onOpenChange} >
+      <DialogContent className="sm:max-w-lg pb-4">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {report.title}
             <span className="ml-2">{getReportTypeBadge(report.type)}</span>
           </DialogTitle>
-          <DialogDescription>
-            Reported by User ID: {report.user_id}
-            {report.created_at && (
-              <span className="block text-xs mt-1">
-                Created on {formatDate(report.created_at)}
-              </span>
-            )}
+          <DialogDescription className="text-left">
+            <div className="flex flex-col gap-1">
+              <div>Reported by User ID: {report.user_id}</div>
+              {report.mod_id && (
+                <div className="text-xs">Moderator: <span className="font-medium">{report.mod_id}</span></div>
+              )}
+              {report.created_at && (
+                <span className="text-xs">
+                  Created on {formatDate(report.created_at)}
+                </span>
+              )}
+            </div>
           </DialogDescription>
         </DialogHeader>
         
-        <div className="mt-4">
+        <div className="mt-0">
           <h3 className="text-sm font-medium mb-2">Description</h3>
           <div className="bg-secondary/50 p-4 rounded-md whitespace-pre-wrap">
             {report.description}
           </div>
+        </div>
+        
+        <div className="mt-0 flex justify-end">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="px-3 py-3 text-xs"
+            onClick={() => onOpenChange(false)}
+          >
+            Close
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
