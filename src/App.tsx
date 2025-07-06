@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Cards from "./pages/Cards";
 import Chips from "./pages/Chips";
 import Reports from "./pages/Reports";
+import ApiData from "./pages/ApiData";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/cards" element={<Cards />} />
             <Route path="/chips" element={<Chips />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/api-data" element={<ApiData />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-// Component tagger removed
+// Import our API plugin
+import { apiPlugin } from "./src/api";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -11,7 +12,8 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    // Component tagger removed
+    // Add our API plugin to handle API endpoints
+    apiPlugin(),
   ],
   resolve: {
     alias: {
