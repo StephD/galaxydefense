@@ -1,7 +1,9 @@
 import type { Plugin } from 'vite';
 import { parse } from 'url';
 import { gameData } from './data';
-import { getAllTurrets, getTurretByName, getTurretsByType } from '../lib/turretService';
+import { supabase } from "../lib/supabase";
+// Import turret service functions at runtime to avoid environment variable issues during build
+// We'll import these dynamically in the middleware function
 
 // Set security headers for all API responses
 const setSecurityHeaders = (res: any) => {
@@ -71,38 +73,61 @@ export function apiPlugin(): Plugin {
             }
             
             const decodedName = decodeURIComponent(nameParam);
-            const turret = await getTurretByName(decodedName);
             
-            if (!turret) {
-              res.statusCode = 404;
+            try {
+              // Dynamically import the turret service to avoid environment variable issues during build
+              const { getTurretByName } = await import('../lib/turretService');
+              const turret = await getTurretByName(decodedName);
+              
+              if (!turret) {
+                res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ error: `Turret '${decodedName}' not found` }));
+                return;
+              }
+              
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: `Turret '${decodedName}' not found` }));
+              res.end(JSON.stringify(turret));
+              return;
+            } catch (error) {
+              handleApiError(res, error);
               return;
             }
-            
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(turret));
-            return;
           }
           
           // Turrets endpoint - either all turrets or filtered by type
           if (pathname === '/api/turrets') {
-            const typeParam = parsedUrl.query.type as string;
-            
-            // If type parameter exists, filter by type
-            if (typeParam) {
-              const decodedType = decodeURIComponent(typeParam);
-              const turrets = await getTurretsByType(decodedType);
+            try {
+              // Dynamically import the turret service to avoid environment variable issues during build
+              const { getAllTurrets } = await import('../lib/turretService');
+              const { data, error } = await supabase
+                .from('turrets')
+                .select('*')
+                .order('name', { ascending: true });
+              
+              console.log(data);
+              // const typeParam = parsedUrl.query.type as string;
+              
+              // // If type parameter exists, filter by type
+              // if (typeParam) {
+              //   const decodedType = decodeURIComponent(typeParam);
+              //   const turrets = await getTurretsByType(decodedType);
+              //   res.setHeader('Content-Type', 'application/json');
+              //   res.end(JSON.stringify(turrets));
+              //   return;
+              // }
+              
+              // Otherwise return all turrets
+              console.log('Fetching all turrets');
+              const turrets = await getAllTurrets();
+              console.log(turrets);
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify(turrets));
               return;
+            } catch (error) {
+              handleApiError(res, error);
+              return;
             }
-            
-            // Otherwise return all turrets
-            const turrets = await getAllTurrets();
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(turrets));
-            return;
           }
           
           // If we get here, the API endpoint was not found

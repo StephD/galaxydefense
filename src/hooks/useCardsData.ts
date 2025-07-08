@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export type TurretType = "Physical" | "Energy" | "Electric" | "Fire" | "Force-field";
 export const TOWER_TYPES = ["Physical", "Energy", "Electric", "Fire", "Force-field"];

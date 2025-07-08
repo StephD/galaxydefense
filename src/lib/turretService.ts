@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from "../integrations/supabase/client";
 import { gameData as originalGameData } from '../api/data';
 
 export interface TurretData {
@@ -26,11 +26,14 @@ const gameData: TurretData[] = originalGameData.map(turret => ({
  * Fetch all turrets from the database or fallback to hardcoded data
  */
 export async function getAllTurrets(): Promise<TurretData[]> {
+  console.log('Fetching turrets from Supabase');
   try {
     const { data, error } = await supabase
       .from('turrets')
       .select('*')
       .order('name', { ascending: true });
+    
+    console.log(data);
 
     if (error) {
       console.error('Error fetching turrets:', error);
@@ -88,38 +91,5 @@ export async function getTurretByName(name: string): Promise<TurretData | null> 
     console.log('Falling back to hardcoded data due to exception');
     const turret = gameData.find(t => t.name.toLowerCase() === name.toLowerCase());
     return turret || null;
-  }
-}
-
-/**
- * Fetch turrets by type or fallback to hardcoded data
- */
-export async function getTurretsByType(type: string): Promise<TurretData[]> {
-  try {
-    const { data, error } = await supabase
-      .from('turrets')
-      .select('*')
-      .eq('type', type)
-      .order('name', { ascending: true });
-
-    if (error) {
-      console.error(`Error fetching turrets of type ${type}:`, error);
-      // Fallback to hardcoded data on error
-      console.log('Falling back to hardcoded data due to error');
-      return gameData.filter(t => t.type.toLowerCase() === type.toLowerCase());
-    }
-
-    // If no data returned, use fallback
-    if (!data || data.length === 0) {
-      console.log(`No turrets of type ${type} found in Supabase, checking fallback data`);
-      return gameData.filter(t => t.type.toLowerCase() === type.toLowerCase());
-    }
-
-    return data;
-  } catch (err) {
-    console.error(`Error in getTurretsByType for ${type}:`, err);
-    // Fallback to hardcoded data on exception
-    console.log('Falling back to hardcoded data due to exception');
-    return gameData.filter(t => t.type.toLowerCase() === type.toLowerCase());
   }
 }
