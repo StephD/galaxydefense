@@ -114,7 +114,7 @@ const Booters: React.FC = () => {
   const handleToggleStatus = async (booster: Booster) => {
     try {
       await updateBooster({
-        boosterId: booster.id,
+        discord_name: booster.discord_name,
         updates: {
           active: !booster.active
         }
@@ -142,12 +142,13 @@ const Booters: React.FC = () => {
       // Sanitize input data
       const sanitizedData = {
         discord_name: formData.discord_name.trim(),
+        discord_nickname: formData.discord_nickname.trim(),
         ig_id: formData.ig_id.trim(),
         active: formData.active
       };
 
       await updateBooster({
-        boosterId: boosterToEdit.id,
+        discord_name: boosterToEdit.discord_name,
         updates: sanitizedData
       });
 
@@ -173,6 +174,7 @@ const Booters: React.FC = () => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = (
       booster.discord_name.toLowerCase().includes(searchLower) ||
+      (booster.discord_nickname && booster.discord_nickname.toLowerCase().includes(searchLower)) ||
       booster.ig_id.toLowerCase().includes(searchLower)
     );
     
@@ -308,6 +310,7 @@ const Booters: React.FC = () => {
                   <TableHeader>
                     <TableRow className="h-10">
                       <TableHead className="py-1 px-2">Discord</TableHead>
+                      <TableHead className="py-1 px-2">Nickname</TableHead>
                       <TableHead className="py-1 px-2">Game ID</TableHead>
                       <TableHead className="py-1 px-2">Status</TableHead>
                       <TableHead className="text-right py-1 px-2">Actions</TableHead>
@@ -317,7 +320,7 @@ const Booters: React.FC = () => {
                     {filteredBoosters.length > 0 ? (
                       filteredBoosters.map((booster) => (
                         <TableRow 
-                          key={booster.id} 
+                          key={booster.discord_name} 
                           className={`h-10 cursor-pointer ${!booster.ig_id || booster.ig_id.trim() === '' ? 'bg-red-100 hover:bg-red-200' : 'hover:bg-muted/50'}`}
                           onClick={() => {
                             setBoosterToEdit(booster);
@@ -325,7 +328,8 @@ const Booters: React.FC = () => {
                           }}
                         >
                           <TableCell className="font-medium py-1 px-2">{booster.discord_name}</TableCell>
-                          <TableCell className="py-1 px-2">{booster.ig_id.slice(0, 20)}...</TableCell>
+                          <TableCell className="py-1 px-2">{booster.discord_nickname || '-'}</TableCell>
+                          <TableCell className="py-1 px-2">{booster.ig_id ? (booster.ig_id.length > 20 ? `${booster.ig_id.slice(0, 20)}...` : booster.ig_id) : '-'}</TableCell>
                           <TableCell className="py-1 px-2">
                             <Badge 
                               variant={booster.active ? "default" : "secondary"} 
@@ -357,7 +361,7 @@ const Booters: React.FC = () => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
+                        <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                           {searchTerm ? "No boosters match your search" : "No boosters found"}
                         </TableCell>
                       </TableRow>

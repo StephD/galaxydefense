@@ -19,7 +19,8 @@ import { Loader2 } from "lucide-react";
 // Define the form validation schema
 const boosterSchema = z.object({
   discord_name: z.string().min(3, "Discord name must be at least 3 characters"),
-  ig_id: z.string().min(2, "In-game ID must be at least 2 characters"),
+  discord_nickname: z.string().optional(),
+  ig_id: z.string().optional(),
   active: z.boolean().default(true),
 });
 
@@ -37,6 +38,7 @@ const BoosterForm = ({
   onCancel,
   defaultValues = {
     discord_name: "",
+    discord_nickname: "",
     ig_id: "",
     active: true,
   },
@@ -72,7 +74,21 @@ const BoosterForm = ({
             <FormItem>
               <FormLabel>Discord Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter Discord name" {...field} />
+                <Input placeholder="Your Discord Name.g." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="discord_nickname"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Discord Nickname</FormLabel>
+              <FormControl>
+                <Input placeholder="Your Nickname" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

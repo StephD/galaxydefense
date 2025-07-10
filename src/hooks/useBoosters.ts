@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 export interface Booster {
   id: string;
   discord_name: string;
+  discord_nickname?: string;
   ig_id: string;
   active: boolean;
   created_at?: string;
@@ -32,12 +33,13 @@ export const useBoosters = () => {
 
 export interface CreateBoosterData {
   discord_name: string;
+  discord_nickname?: string;
   ig_id: string;
   active?: boolean;
 }
 
 export interface UpdateBoosterData {
-  boosterId: string;
+  discord_name: string;
   updates: Partial<Booster>;
 }
 
@@ -51,6 +53,7 @@ export const addBooster = () => {
         .from('boosters')
         .insert([{
           discord_name: boosterData.discord_name,
+          discord_nickname: boosterData.discord_nickname,
           ig_id: boosterData.ig_id,
           active: boosterData.active !== undefined ? boosterData.active : true
         }])
@@ -76,11 +79,11 @@ export const editBooster = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ boosterId, updates }: UpdateBoosterData) => {
+    mutationFn: async ({ discord_name, updates }: UpdateBoosterData) => {
       const { data, error } = await supabase
         .from('boosters')
         .update(updates)
-        .eq('id', boosterId)
+        .eq('discord_name', discord_name)
         .select()
         .single();
       
@@ -168,7 +171,8 @@ export const bulkUpdateBoosters = () => {
         name => !existingBoosterMap.has(name)
       ).map(name => ({
         discord_name: name,
-        ig_id: name // Use discord name as ig_id as well
+        discord_nickname: '', // Empty nickname by default
+        ig_id: '' // Empty game ID by default
       }));
       
       // Identify boosters to update (in existing map but might need status change)
@@ -179,14 +183,14 @@ export const bulkUpdateBoosters = () => {
         // If in new list, ensure it's active
         if (discordNamesInNewList.has(booster.discord_name) && !booster.active) {
           boostersToUpdate.push({
-            id: booster.id,
+            discord_name: booster.discord_name,
             active: true
           });
         }
         // If not in new list, ensure it's inactive
         else if (!discordNamesInNewList.has(booster.discord_name) && booster.active) {
           boostersToUpdate.push({
-            id: booster.id,
+            discord_name: booster.discord_name,
             active: false
           });
         }
@@ -218,10 +222,10 @@ export const bulkUpdateBoosters = () => {
         const { error } = await supabase
           .from('boosters')
           .update({ active: update.active })
-          .eq('id', update.id);
+          .eq('discord_name', update.discord_name);
         
         if (error) {
-          console.error(`Error updating booster ${update.id}:`, error);
+          console.error(`Error updating booster ${update.discord_name}:`, error);
           results.errors.push(`Error updating booster: ${error.message}`);
         } else {
           results.updated++;
