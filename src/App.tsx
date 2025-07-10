@@ -9,6 +9,7 @@ import Cards from "./pages/Cards";
 import Chips from "./pages/Chips";
 import Reports from "./pages/Reports";
 import ApiData from "./pages/ApiData";
+import Booters from "./pages/Booters";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/chips" element={<Chips />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/api-data" element={<ApiData />} />
+            <Route path="/booters" element={<Booters />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

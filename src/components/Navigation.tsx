@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Database, Home, Cpu, LogIn, LogOut, Menu, X, FileText } from "lucide-react";
+import { Database, Home, Cpu, LogIn, LogOut, Menu, X, FileText, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LoginModal from "./LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -73,13 +73,22 @@ const Navigation = () => {
                   <span>Chips</span>
                 </Link>
                 {isAuthenticated && (
-                  <Link 
-                    to="/reports" 
-                    className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    <FileText className="h-4 w-4" />
-                    <span>Reports</span>
-                  </Link>
+                  <>
+                    <Link 
+                      to="/reports" 
+                      className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Reports</span>
+                    </Link>
+                    <Link 
+                      to="/booters" 
+                      className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      <Users className="h-4 w-4" />
+                      <span>Booters</span>
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -165,6 +174,14 @@ const Navigation = () => {
                 >
                   <FileText className="h-5 w-5" />
                   <span className="text-lg">Reports</span>
+                </Link>
+                <Link 
+                  to="/booters" 
+                  className="flex items-center space-x-3 p-3 rounded-md hover:bg-secondary transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Users className="h-5 w-5" />
+                  <span className="text-lg">Boosters</span>
                 </Link>
             </div>
             
