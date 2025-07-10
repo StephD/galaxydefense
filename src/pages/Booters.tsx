@@ -325,7 +325,7 @@ const Booters: React.FC = () => {
                           }}
                         >
                           <TableCell className="font-medium py-1 px-2">{booster.discord_name}</TableCell>
-                          <TableCell className="py-1 px-2">{booster.ig_id.slice(0, 10)}...</TableCell>
+                          <TableCell className="py-1 px-2">{booster.ig_id.slice(0, 20)}...</TableCell>
                           <TableCell className="py-1 px-2">
                             <Badge 
                               variant={booster.active ? "default" : "secondary"} 
