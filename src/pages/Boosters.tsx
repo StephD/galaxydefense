@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const Booters: React.FC = () => {
+const Boosters: React.FC = () => {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { data: boosters = [], isLoading, error, refetch } = useBoosters();
   const { mutateAsync: createBooster } = addBooster();
@@ -204,7 +204,7 @@ const Booters: React.FC = () => {
       <main className="container mx-auto px-4 py-6">
         <div className="text-center mb-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Booters
+            Boosters
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Manage all game boosters. View active and inactive boosters.
@@ -410,7 +410,8 @@ const Booters: React.FC = () => {
                 onCancel={() => setIsEditModalOpen(false)}
                 defaultValues={{
                   discord_name: boosterToEdit.discord_name,
-                  ig_id: boosterToEdit.ig_id,
+                  discord_nickname: boosterToEdit.discord_nickname || "",
+                  ig_id: boosterToEdit.ig_id || "",
                   active: boosterToEdit.active
                 }}
                 isEditing={true}
@@ -466,4 +467,4 @@ const Booters: React.FC = () => {
   );
 };
 
-export default Booters;
+export default Boosters;

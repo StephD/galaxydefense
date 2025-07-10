@@ -82,11 +82,11 @@ const Navigation = () => {
                       <span>Reports</span>
                     </Link>
                     <Link 
-                      to="/booters" 
+                      to="/boosters" 
                       className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors duration-200"
                     >
                       <Users className="h-4 w-4" />
-                      <span>Booters</span>
+                      <span>Boosters</span>
                     </Link>
                   </>
                 )}
@@ -176,7 +176,7 @@ const Navigation = () => {
                   <span className="text-lg">Reports</span>
                 </Link>
                 <Link 
-                  to="/booters" 
+                  to="/boosters" 
                   className="flex items-center space-x-3 p-3 rounded-md hover:bg-secondary transition-colors duration-200"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

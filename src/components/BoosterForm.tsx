@@ -88,7 +88,7 @@ const BoosterForm = ({
             <FormItem>
               <FormLabel>Discord Nickname</FormLabel>
               <FormControl>
-                <Input placeholder="Your Nickname" {...field} value={field.value || ''} />
+                <Input placeholder="Your Nickname" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
