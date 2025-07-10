@@ -280,7 +280,7 @@ const Booters: React.FC = () => {
                     </label>
                   </div>
                 </div>
-                {/* <div className="relative w-[260px]">
+                <div className="relative w-[260px]">
                   <Input
                     type="text"
                     placeholder="Search by name or ID..."
@@ -299,7 +299,7 @@ const Booters: React.FC = () => {
                       ×
                     </Button>
                   )}
-                </div> */}
+                </div>
               </div>
             </div>
             
