@@ -88,7 +88,7 @@ const Boosters: React.FC = () => {
       // Sanitize input data
       const sanitizedData = {
         discord_name: formData.discord_name.trim(),
-        ig_id: formData.ig_id.trim(),
+        game_id: formData.game_id.trim(),
         active: formData.active
       };
 
@@ -143,7 +143,7 @@ const Boosters: React.FC = () => {
       const sanitizedData = {
         discord_name: formData.discord_name.trim(),
         discord_nickname: formData.discord_nickname.trim(),
-        ig_id: formData.ig_id.trim(),
+        game_id: formData.game_id.trim(),
         active: formData.active
       };
 
@@ -175,7 +175,7 @@ const Boosters: React.FC = () => {
     const matchesSearch = (
       booster.discord_name.toLowerCase().includes(searchLower) ||
       (booster.discord_nickname && booster.discord_nickname.toLowerCase().includes(searchLower)) ||
-      booster.ig_id.toLowerCase().includes(searchLower)
+      booster.game_id.toLowerCase().includes(searchLower)
     );
     
     // If showInactive is false, only show active boosters
@@ -321,7 +321,7 @@ const Boosters: React.FC = () => {
                       filteredBoosters.map((booster) => (
                         <TableRow 
                           key={booster.discord_name} 
-                          className={`h-10 cursor-pointer ${!booster.ig_id || booster.ig_id.trim() === '' ? 'bg-red-100 hover:bg-red-200' : 'hover:bg-muted/50'}`}
+                          className={`h-10 cursor-pointer ${!booster.game_id || booster.game_id.trim() === '' ? 'bg-red-100 hover:bg-red-200' : 'hover:bg-muted/50'}`}
                           onClick={() => {
                             setBoosterToEdit(booster);
                             setIsEditModalOpen(true);
@@ -329,7 +329,7 @@ const Boosters: React.FC = () => {
                         >
                           <TableCell className="font-medium py-1 px-2">{booster.discord_name}</TableCell>
                           <TableCell className="py-1 px-2">{booster.discord_nickname || '-'}</TableCell>
-                          <TableCell className="py-1 px-2">{booster.ig_id ? (booster.ig_id.length > 20 ? `${booster.ig_id.slice(0, 20)}...` : booster.ig_id) : '-'}</TableCell>
+                          <TableCell className="py-1 px-2">{booster.game_id ? (booster.game_id.length > 20 ? `${booster.game_id.slice(0, 20)}...` : booster.game_id) : '-'}</TableCell>
                           <TableCell className="py-1 px-2">
                             <Badge 
                               variant={booster.active ? "default" : "secondary"} 
@@ -411,7 +411,7 @@ const Boosters: React.FC = () => {
                 defaultValues={{
                   discord_name: boosterToEdit.discord_name,
                   discord_nickname: boosterToEdit.discord_nickname || "",
-                  ig_id: boosterToEdit.ig_id || "",
+                  game_id: boosterToEdit.game_id || "",
                   active: boosterToEdit.active
                 }}
                 isEditing={true}

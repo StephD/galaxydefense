@@ -20,7 +20,7 @@ import { Loader2 } from "lucide-react";
 const boosterSchema = z.object({
   discord_name: z.string().min(3, "Discord name must be at least 3 characters"),
   discord_nickname: z.string().optional(),
-  ig_id: z.string().optional(),
+  game_id: z.string().optional(),
   active: z.boolean().default(true),
 });
 
@@ -39,7 +39,7 @@ const BoosterForm = ({
   defaultValues = {
     discord_name: "",
     discord_nickname: "",
-    ig_id: "",
+    game_id: "",
     active: true,
   },
   isEditing = false,
@@ -97,7 +97,7 @@ const BoosterForm = ({
 
         <FormField
           control={form.control}
-          name="ig_id"
+          name="game_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>In-Game ID</FormLabel>

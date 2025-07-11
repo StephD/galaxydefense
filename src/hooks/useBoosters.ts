@@ -5,7 +5,7 @@ export interface Booster {
   id: string;
   discord_name: string;
   discord_nickname?: string;
-  ig_id: string;
+  game_id: string;
   active: boolean;
   created_at?: string;
   updated_at?: string;
@@ -34,7 +34,7 @@ export const useBoosters = () => {
 export interface CreateBoosterData {
   discord_name: string;
   discord_nickname?: string;
-  ig_id: string;
+  game_id: string;
   active?: boolean;
 }
 
@@ -54,7 +54,7 @@ export const addBooster = () => {
         .insert([{
           discord_name: boosterData.discord_name,
           discord_nickname: boosterData.discord_nickname,
-          ig_id: boosterData.ig_id,
+          game_id: boosterData.game_id,
           active: boosterData.active !== undefined ? boosterData.active : true
         }])
         .select()
@@ -114,9 +114,9 @@ export const downloadActiveBoostersList = (boosters: Booster[]) => {
   // Filter only active boosters
   const activeBoosters = boosters.filter(booster => booster.active);
   
-  // Create content for download (just ig_id values, one per line)
+  // Create content for download (just game_id values, one per line)
   const content = activeBoosters
-    .map(booster => booster.ig_id)
+    .map(booster => booster.game_id)
     .filter(id => id && id.trim() !== '') // Filter out empty IDs
     .join('\n');
   
@@ -172,7 +172,7 @@ export const bulkUpdateBoosters = () => {
       ).map(name => ({
         discord_name: name,
         discord_nickname: '', // Empty nickname by default
-        ig_id: '' // Empty game ID by default
+        game_id: '' // Empty game ID by default
       }));
       
       // Identify boosters to update (in existing map but might need status change)
@@ -205,7 +205,7 @@ export const bulkUpdateBoosters = () => {
           .from('boosters')
           .insert(boostersToAdd.map(entry => ({
             discord_name: entry.discord_name,
-            ig_id:'', // Use discord name as ig_id
+            game_id:'', // Use discord name as game_id
             active: true
           })));
         
