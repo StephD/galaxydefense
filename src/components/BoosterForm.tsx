@@ -22,6 +22,7 @@ const boosterSchema = z.object({
   discord_nickname: z.string().optional(),
   game_id: z.string().optional(),
   active: z.boolean().default(true),
+  premium_since: z.string().optional(),
 });
 
 type BoosterFormValues = z.infer<typeof boosterSchema>;
@@ -41,6 +42,7 @@ const BoosterForm = ({
     discord_nickname: "",
     game_id: "",
     active: true,
+    premium_since: "",
   },
   isEditing = false,
 }: BoosterFormProps) => {
@@ -130,6 +132,24 @@ const BoosterForm = ({
                   Is this booster currently active?
                 </p>
               </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="premium_since"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Premium Since</FormLabel>
+              <FormControl>
+                <Input 
+                  type="date" 
+                  {...field} 
+                  value={field.value || ''}
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

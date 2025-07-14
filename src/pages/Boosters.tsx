@@ -89,7 +89,8 @@ const Boosters: React.FC = () => {
       const sanitizedData = {
         discord_name: formData.discord_name.trim(),
         game_id: formData.game_id.trim(),
-        active: formData.active
+        active: formData.active,
+        premium_since: formData.premium_since || null
       };
 
       await createBooster(sanitizedData);
@@ -144,7 +145,8 @@ const Boosters: React.FC = () => {
         discord_name: formData.discord_name.trim(),
         discord_nickname: formData.discord_nickname.trim(),
         game_id: formData.game_id.trim(),
-        active: formData.active
+        active: formData.active,
+        premium_since: formData.premium_since || null
       };
 
       await updateBooster({
@@ -313,6 +315,7 @@ const Boosters: React.FC = () => {
                       <TableHead className="py-1 px-2">Nickname</TableHead>
                       <TableHead className="py-1 px-2">Game ID</TableHead>
                       <TableHead className="py-1 px-2">Status</TableHead>
+                      <TableHead className="py-1 px-2">Since</TableHead>
                       <TableHead className="text-right py-1 px-2">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -338,6 +341,11 @@ const Boosters: React.FC = () => {
                               {booster.active ? "Active" : "Inactive"}
                             </Badge>
                           </TableCell>
+                          <TableCell className="py-1 px-2">{booster.premium_since ? new Date(booster.premium_since).toLocaleDateString('en-GB', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: '2-digit'
+                            }) : '-'}</TableCell>
                           <TableCell className="text-right py-1 px-2">
                             <div className="flex justify-end gap-0">
                               <Button

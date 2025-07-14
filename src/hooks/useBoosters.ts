@@ -7,6 +7,7 @@ export interface Booster {
   discord_nickname?: string;
   game_id: string;
   active: boolean;
+  premium_since?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -36,6 +37,7 @@ export interface CreateBoosterData {
   discord_nickname?: string;
   game_id: string;
   active?: boolean;
+  premium_since?: string;
 }
 
 export interface UpdateBoosterData {
@@ -55,7 +57,8 @@ export const addBooster = () => {
           discord_name: boosterData.discord_name,
           discord_nickname: boosterData.discord_nickname,
           game_id: boosterData.game_id,
-          active: boosterData.active !== undefined ? boosterData.active : true
+          active: boosterData.active !== undefined ? boosterData.active : true,
+          premium_since: boosterData.premium_since || null
         }])
         .select()
         .single();
