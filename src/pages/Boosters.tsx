@@ -375,7 +375,9 @@ const Boosters: React.FC = () => {
                           <TableCell className="py-1 px-2">{booster.updated_at ? new Date(booster.updated_at).toLocaleDateString('en-GB', {
                               day: 'numeric',
                               month: 'long',
-                              year: '2-digit'
+                              year: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit'
                             }) : '-'}</TableCell>
                           <TableCell className="text-right py-1 px-2">
                             <div className="flex justify-end gap-0">
