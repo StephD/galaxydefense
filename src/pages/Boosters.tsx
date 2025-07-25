@@ -43,6 +43,8 @@ const Boosters: React.FC = () => {
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [bulkBoosterList, setBulkBoosterList] = useState("");
   const [showInactive, setShowInactive] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 50;
 
   // Redirect to home if not authenticated
   React.useEffect(() => {
@@ -184,6 +186,17 @@ const Boosters: React.FC = () => {
     return matchesSearch && (showInactive || booster.active);
   });
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredBoosters.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedBoosters = filteredBoosters.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, showInactive]);
+
   // Show loading state while checking authentication
   if (authLoading) {
     return (
@@ -211,6 +224,13 @@ const Boosters: React.FC = () => {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Manage all game boosters. View active and inactive boosters.
           </p>
+          {!isLoading && !error && (
+            <div className="mt-4">
+              <p className="text-lg font-semibold text-primary">
+                Total Boosters: {boosters.length}
+              </p>
+            </div>
+          )}
         </div>
         <hr className="my-2" />
 
@@ -246,15 +266,7 @@ const Boosters: React.FC = () => {
                     <Plus size={12} />
                     Add Booster
                   </Button>
-                  <Button 
-                    onClick={() => setIsBulkModalOpen(true)} 
-                    size="sm" 
-                    variant="outline"
-                    className="h-8 text-xs px-2 py-1 flex items-center gap-1"
-                  >
-                    <Plus size={12} />
-                    Bulk Update
-                  </Button>
+
                   <Button 
                     onClick={() => downloadActiveBoostersList(boosters)}
                     size="sm" 
@@ -305,6 +317,19 @@ const Boosters: React.FC = () => {
               </div>
             </div>
             
+            {/* Filtered count display */}
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm text-muted-foreground">
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredBoosters.length)} of {filteredBoosters.length} boosters
+                {filteredBoosters.length !== boosters.length && ` (filtered from ${boosters.length} total)`}
+              </p>
+              {totalPages > 1 && (
+                <p className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </p>
+              )}
+            </div>
+            
             {/* Table */}
             <div className="border rounded-md overflow-hidden">
               <div className="overflow-x-auto">
@@ -316,12 +341,13 @@ const Boosters: React.FC = () => {
                       <TableHead className="py-1 px-2">Game ID</TableHead>
                       <TableHead className="py-1 px-2">Status</TableHead>
                       <TableHead className="py-1 px-2">Since</TableHead>
+                      <TableHead className="py-1 px-2">Last Edit</TableHead>
                       <TableHead className="text-right py-1 px-2">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredBoosters.length > 0 ? (
-                      filteredBoosters.map((booster) => (
+                    {paginatedBoosters.length > 0 ? (
+                      paginatedBoosters.map((booster) => (
                         <TableRow 
                           key={booster.discord_name} 
                           className={`h-10 cursor-pointer ${!booster.game_id || booster.game_id.trim() === '' ? 'bg-red-100 hover:bg-red-200' : 'hover:bg-muted/50'}`}
@@ -332,7 +358,7 @@ const Boosters: React.FC = () => {
                         >
                           <TableCell className="font-medium py-1 px-2">{booster.discord_name}</TableCell>
                           <TableCell className="py-1 px-2">{booster.discord_nickname || '-'}</TableCell>
-                          <TableCell className="py-1 px-2">{booster.game_id ? (booster.game_id.length > 20 ? `${booster.game_id.slice(0, 20)}...` : booster.game_id) : '-'}</TableCell>
+                          <TableCell className="py-1 px-2">{booster.game_id ? (booster.game_id.length > 28 ? `${booster.game_id.slice(0, 28)}...` : booster.game_id) : '-'}</TableCell>
                           <TableCell className="py-1 px-2">
                             <Badge 
                               variant={booster.active ? "default" : "secondary"} 
@@ -342,6 +368,11 @@ const Boosters: React.FC = () => {
                             </Badge>
                           </TableCell>
                           <TableCell className="py-1 px-2">{booster.premium_since ? new Date(booster.premium_since).toLocaleDateString('en-GB', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: '2-digit'
+                            }) : '-'}</TableCell>
+                          <TableCell className="py-1 px-2">{booster.updated_at ? new Date(booster.updated_at).toLocaleDateString('en-GB', {
                               day: 'numeric',
                               month: 'long',
                               year: '2-digit'
@@ -369,8 +400,8 @@ const Boosters: React.FC = () => {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
-                          {searchTerm ? "No boosters match your search" : "No boosters found"}
+                        <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
+                          {filteredBoosters.length === 0 ? (searchTerm ? "No boosters match your search" : "No boosters found") : "No boosters on this page"}
                         </TableCell>
                       </TableRow>
                     )}
@@ -378,6 +409,58 @@ const Boosters: React.FC = () => {
                 </Table>
               </div>
             </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2 mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 px-3"
+                >
+                  Previous
+                </Button>
+                
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNumber;
+                    if (totalPages <= 5) {
+                      pageNumber = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNumber = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNumber = totalPages - 4 + i;
+                    } else {
+                      pageNumber = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNumber}
+                        variant={currentPage === pageNumber ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNumber)}
+                        className="h-8 w-8 p-0"
+                      >
+                        {pageNumber}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 px-3"
+                >
+                  Next
+                </Button>
+              </div>
+            )}
           </div>
         )}
         

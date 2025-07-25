@@ -19,8 +19,8 @@ export const useBoosters = () => {
       const { data, error } = await supabase
         .from('boosters')
         .select('*')
-        .order('active', { ascending: false })
-        .order('discord_name', { ascending: false });
+        .order('premium_since', { ascending: false })
+        .order('discord_name', { ascending: true });
 
       if (error) {
         console.error('Error fetching boosters:', error);
